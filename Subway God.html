@@ -22,7 +22,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 .meter{height:12px;border-radius:8px;background:var(--rule);overflow:hidden;margin:4px 0 8px}
 .meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5fcf80,#f5c542,#ef5350);background-size:250px 100%;border-radius:8px}
 .small{font-size:13px;color:var(--mute)}
-.nb{display:grid;grid-template-columns:70px 1fr 38px;gap:6px;align-items:center;font-size:13px;margin:3px 0}
+.nb{display:grid;grid-template-columns:78px 1fr 38px;gap:6px;align-items:center;font-size:13px;margin:3px 0}
 .nb .bar{height:9px;border-radius:6px;background:var(--rule);overflow:hidden}.nb .bar i{display:block;height:100%}
 .nb b{text-align:right;font-variant-numeric:tabular-nums}
 #alert{margin-top:6px;font-size:13px;font-weight:600;color:#d93636}
@@ -67,13 +67,13 @@ button:focus-visible{outline:3px solid #2b6ef2;outline-offset:2px}
 .lb .m{font-size:11px;opacity:.8}.lb.sad .m{color:#ef5350;opacity:1;font-weight:700}
 body:not(.play) #hud,body:not(.play) #bot,body:not(.play) #hint,body:not(.play) #toast{display:none}
 #scr .card{max-width:680px}
-.wmap{position:relative;height:340px;border-radius:14px;overflow:hidden;background:radial-gradient(circle at 30% 40%,#a9dc8f,#6fb46a 55%,#4a9a6e)}
+.wmap{position:relative;height:340px;border-radius:14px;overflow:hidden;background:#bccbd0}
 .pin{position:absolute;transform:translate(-50%,-50%);width:132px;display:flex;flex-direction:column;align-items:center;gap:1px;background:var(--p);border:2px solid var(--rule);border-radius:12px;padding:6px;color:var(--ink);text-align:center;font-size:13px}
 .pin:disabled{opacity:.6;cursor:default}.pin .ic{font-size:26px}
 .shop{max-height:42vh;overflow:auto;margin:8px 0}.it{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--rule)}
 .stp{display:flex;gap:8px;align-items:center}.stp button{width:30px;height:30px;border-radius:8px;border:2px solid var(--rule);background:transparent;color:var(--ink)}.stp button:disabled{opacity:.35;cursor:default}
 @media(max-width:760px){.wmap{height:420px}.pin{width:104px;font-size:11px}}
-</style>
+#hud{max-height:calc(100vh - 20px);overflow:auto}.wmap svg{position:absolute;inset:0;width:100%;height:100%}.pin{z-index:2}</style>
 </head>
 <body>
 <div id="stage"></div>
@@ -83,8 +83,8 @@ body:not(.play) #hud,body:not(.play) #bot,body:not(.play) #hint,body:not(.play) 
   <div class="small" style="margin-top:6px">Catastrophe meter</div>
   <div class="meter"><i id="chaos"></i></div>
   <div class="row small"><span id="crews"></span><b id="money" style="font-size:16px;color:var(--ink)"></b></div>
-  <div class="btns"><button class="btn sm" id="emg">Emergency crew $150</button><button class="btn sm gray" id="spd">Speed x1</button><button class="btn sm gray" id="exit">Town map</button></div>
-  <div id="tkl" class="small"></div>
+  <div class="btns"><button class="btn sm" id="emg">Emergency fix $200k</button><button class="btn sm gray" id="spd">Speed x1</button><button class="btn sm gray" id="exit">Town map</button></div>
+  <div id="tkl" class="small"></div><div class="small" style="margin-top:6px">Next incident odds</div><div id="risk"></div><div class="small" id="aiu"></div>
   <div class="row" style="margin-top:6px"><b>Fairness</b><b id="fair" style="font-size:20px">100</b></div>
   <div id="nbs"></div>
   <div id="alert"></div>
@@ -98,7 +98,7 @@ body:not(.play) #hud,body:not(.play) #bot,body:not(.play) #hint,body:not(.play) 
   <div class="btns"><button class="btn" id="accept">Do it</button><label class="small"><input type="checkbox" id="auto"> Let the bot drive</label></div>
 </div>
 <div id="toast" role="status"></div>
-<div id="hint">Drag to turn the map, scroll to zoom. Tap a train to switch its track. Tap a closed or unhappy station tag, or a broken train, to spend a repair crew.</div>
+<div id="hint">Drag to turn the map, scroll to zoom. Tap a train to switch its track. Tap a closed or unhappy station tag, or a broken train, to spend a repair crew (an instant train repair also costs $75k).</div>
 <div id="scr"><div class="card" id="scrc"></div></div>
 <script>
 (function(){
@@ -107,17 +107,17 @@ function $(s){return document.querySelector(s)}
 function fmt(t){t=Math.max(0,Math.ceil(t));return Math.floor(t/60)+':'+('0'+t%60).slice(-2)}
 var SC=['#e9a23b','#4caf7a','#4a90d9','#e06377','#9b6be0'],SH=[0xe9a23b,0x4caf7a,0x4a90d9,0xe06377,0x9b6be0];
 var TKC=[0x2fb5a9,0x9b6be0,0xe9a23b,0xe06377,0x4a90d9,0x6cc24a],TKS=['#2fb5a9','#9b6be0','#e9a23b','#e06377','#4a90d9','#6cc24a'];
-var TIME=600;
+var TIME=600,RN={br:'Breakdown',cr:'Overcrowd',fl:'Flood',ri:'Riot',eq:'Quake',ls:'Landslide',tf:'Tree fall'};function mny(n){return n>=1e6?'$'+(n/1e6).toFixed(2).replace(/0$/,'')+'M':'$'+Math.round(n/1e3)+'k'}
 var star=[['a','Steelgate'],['b','Ironforge'],['c','Anvil Hill'],['d','Rivet Row'],['e','Crestview']].map(function(s,k){var a=(-90+72*k)*Math.PI/180;return [s[0],s[1],Math.round(Math.cos(a)*20),Math.round(Math.sin(a)*20),[2.4,2,2.8,1.8,2.2][k]]});
 var TW=[
-{n:'Fox Hollow',ttl:'Apprentice Conductor Town',size:'2 mi by 1 mi',ic:'🌲',shape:'rect',w:20,h:10,cd:26,st:[['a','Pinewood',-7,0,2],['b','Eastbrook',7,0,2.6]],tk:[['a b',0,-2.2],['a b',0,0],['a b',0,2.2]],base:900,tr:2,ev:['br','cr'],gap:[18,26],ground:0x8fcf6a,outer:0x2f7a3f,sky:0xcfe8d5,th:'forest',nw:'The basics: breakdowns, crowds and station morale.'},
-{n:'Acorn Bay',ttl:'Novice Conductor Town',size:'3 mi by 3 mi',ic:'🏖️',shape:'rect',w:24,h:24,cd:34,st:[['a','Driftwood',-8,-6,2],['b','Shellcove',8,-6,2.4],['c','Pier Street',0,8,3]],tk:[['a b',0,0],['b c',0,0],['c a',0,0]],base:1100,tr:2,ev:['br','cr','fl'],gap:[16,24],ground:0x9fd470,outer:0x49a6e0,sky:0xbfe3f5,th:'bay',nw:'New: floods close stations near the water.'},
-{n:'Merchant Ford',ttl:'Journeyman Conductor Town',size:'circle, 5 mi radius',ic:'🏙️',shape:'circle',r:16,cd:40,st:[['a','Old Bridge',-9,-3,2.2],['b','Market Square',9,-3,3],['c','Guildhall',0,9,2.4]],tk:[['a b',0,0],['b c',0,0],['c a',0,0],['a b',0,2.8],['a b',0,-2.8]],base:1400,tr:3,ev:['br','cr','cr','cr','ri'],gap:[14,20],ground:0xb7c4a0,outer:0x2f7a3f,sky:0xe3e6ec,th:'urban',nw:'New: heavier crowds and riots at unhappy stations.'},
-{n:'Dragon Hollow',ttl:'Master Conductor Town',size:'circle, 7 mi radius',ic:'🏔️',shape:'circle',r:20,cd:46,st:[['a','Ember Gate',-12,0,2],['b','Scale Market',0,-11,2.6],['c','Wyrm Row',12,0,3],['d','Cinder Quay',0,11,2.2]],tk:[['a b',0,0],['b c',0,0],['c d',0,0],['d a',0,0],['a c',0,0]],base:1700,tr:3,ev:['br','cr','eq','ls'],gap:[13,19],ground:0xc2b18f,outer:0x6f8f5a,sky:0xd8d4cc,th:'dragon',nw:'New: earthquakes and landslides.'},
-{n:'Ironcrest City',ttl:'Grandmaster Conductor Town',size:'star, 7 mi sides',ic:'⭐',shape:'star',R:26,ri:12,cd:52,st:star,tk:[['a c',0,0],['b d',0,0],['c e',0,0],['d a',0,0],['e b',0,0],['a b',0,0]],base:2000,tr:4,ev:['br','cr','cr','ri','tf'],gap:[11,16],ground:0x9aa7bd,outer:0x2f7a3f,sky:0x9db0d6,th:'iron',nw:'New: riots, bigger crowds and falling trees that cut power.'}];
+{n:'Fox Hollow',ttl:'Apprentice Conductor Town',size:'2 mi by 1 mi',ic:'🌲',shape:'rect',w:20,h:10,cd:26,st:[['a','Pinewood',-7,0,2],['b','Eastbrook',7,0,2.6]],tk:[['a b',0,-2.2],['a b',0,0],['a b',0,2.2]],base:5000000,tr:2,ev:['br','cr'],gap:[18,26],ground:0x8fcf6a,outer:0x2f7a3f,sky:0xcfe8d5,th:'forest',nw:'The basics: breakdowns, crowds and station morale.'},
+{n:'Acorn Bay',ttl:'Novice Conductor Town',size:'3 mi by 3 mi',ic:'🏖️',shape:'rect',w:24,h:24,cd:34,st:[['a','Driftwood',-8,-6,2],['b','Shellcove',8,-6,2.4],['c','Pier Street',0,8,3]],tk:[['a b',0,0],['b c',0,0],['c a',0,0]],base:5000000,tr:2,ev:['br','cr','fl'],gap:[16,24],ground:0x9fd470,outer:0x49a6e0,sky:0xbfe3f5,th:'bay',nw:'New: floods close stations near the water.'},
+{n:'Merchant Ford',ttl:'Journeyman Conductor Town',size:'circle, 5 mi radius',ic:'🏙️',shape:'circle',r:16,cd:40,st:[['a','Old Bridge',-9,-3,2.2],['b','Market Square',9,-3,3],['c','Guildhall',0,9,2.4]],tk:[['a b',0,0],['b c',0,0],['c a',0,0],['a b',0,2.8],['a b',0,-2.8]],base:5000000,tr:3,ev:['br','cr','cr','cr','ri'],gap:[14,20],ground:0xb7c4a0,outer:0x2f7a3f,sky:0xe3e6ec,th:'urban',nw:'New: heavier crowds and riots at unhappy stations.'},
+{n:'Dragon Hollow',ttl:'Master Conductor Town',size:'circle, 7 mi radius',ic:'🏔️',shape:'circle',r:20,cd:46,st:[['a','Ember Gate',-12,0,2],['b','Scale Market',0,-11,2.6],['c','Wyrm Row',12,0,3],['d','Cinder Quay',0,11,2.2]],tk:[['a b',0,0],['b c',0,0],['c d',0,0],['d a',0,0],['a c',0,0]],base:5000000,tr:3,ev:['br','cr','eq','ls'],gap:[13,19],ground:0xc2b18f,outer:0x6f8f5a,sky:0xd8d4cc,th:'dragon',nw:'New: earthquakes and landslides.'},
+{n:'Ironcrest City',ttl:'Grandmaster Conductor Town',size:'star, 7 mi sides',ic:'⭐',shape:'star',R:26,ri:12,cd:52,st:star,tk:[['a c',0,0],['b d',0,0],['c e',0,0],['d a',0,0],['e b',0,0],['a b',0,0]],base:5000000,tr:4,ev:['br','cr','cr','ri','tf'],gap:[11,16],ground:0x9aa7bd,outer:0x2f7a3f,sky:0x9db0d6,th:'iron',nw:'New: riots, bigger crowds and falling trees that cut power.'}];
 var prog={open:1,stars:[0,0,0,0,0]};
-try{var sv=JSON.parse(localStorage.getItem('sg3d2'));if(sv&&sv.open)prog=sv}catch(e){}
-function save(){try{localStorage.setItem('sg3d2',JSON.stringify(prog))}catch(e){}}
+try{var sv=JSON.parse(localStorage.getItem('sg3d3'));if(sv&&sv.open)prog=sv}catch(e){}
+function save(){try{localStorage.setItem('sg3d3',JSON.stringify(prog))}catch(e){}}
 
 var ren=new T.WebGLRenderer({antialias:true});
 ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.shadowMap.enabled=true;ren.shadowMap.type=T.PCFSoftShadowMap;
@@ -184,9 +184,9 @@ function build(tw){
   TK.forEach(function(k,ti){
     for(var i=0;i<k.pts.length-1;i++){
       var p=k.pts[i],q=k.pts[i+1],dx=q.x-p.x,dz=q.z-p.z,d=Math.hypot(dx,dz),r=-Math.atan2(dz,dx),nx=-dz/d*.3,nz=dx/d*.3,mx=(p.x+q.x)/2,mz=(p.z+q.z)/2;
-      M(BX(d,.14,1.1),0x6b6f78,mx,.07,mz).rotation.y=r;
+      M(BX(d,.14,2.1),0x6b6f78,mx,.07,mz).rotation.y=r;
       k.stripe=k.stripe||[];k.stripe.push(M(BX(d,.04,.2),TKC[ti],mx,.16,mz));k.stripe[k.stripe.length-1].rotation.y=r;
-      for(var s=-1;s<=1;s+=2)M(BX(d,.1,.07),0xdfe4ea,mx+nx*s,.18,mz+nz*s).rotation.y=r;
+      [-.8,-.2,.2,.8].forEach(function(o){M(BX(d,.1,.07),0xdfe4ea,mx+nx/.3*o,.18,mz+nz/.3*o).rotation.y=r});
     }
     var a=k.pts[0],b=k.pts[1],fx=new T.Group();fx.position.set((a.x+b.x)/2,0,(a.z+b.z)/2);root.add(fx);
     var rocks=new T.Group();fx.add(rocks);rocks.visible=false;
@@ -244,26 +244,26 @@ function mkStations(tw){
 function init(i,bought){
   var tw=TW[i];build(tw);mkStations(tw);
   var up={pump:bought.pump||0,police:bought.police||0,seis:bought.seis||0,trim:bought.trim||0},cost=0;
-  var its=items(tw);its.forEach(function(it){cost+=(bought[it.k]||0)*it.c;if(it.k.slice(0,2)==='s:')S[it.k.slice(2)].staff=bought[it.k]||0});
+  var its=items(tw);its.forEach(function(it){cost+=(bought[it.k]||0)*it.c;if(it.k.slice(0,2)==='s:')S[it.k.slice(2)].staff=1+(bought[it.k]||0)});
   TR=[];var n=tw.tr+(bought.train||0),cnt=TK.map(function(){return 0});
-  for(var t=0;t<n;t++){var best=0;cnt.forEach(function(c,k){if(c<cnt[best])best=k});cnt[best]++;TR.push(mkTrain(t+1,best))}
-  var crews=2+(bought.crew||0);
-  G={i:i,tw:tw,t:0,over:false,crews:crews,maxc:crews,crewT:0,money:tw.base-cost,next:8,trains:TR,hist:{},fs:0,fn:0,chaos:0,peak:0,sug:null,sugT:0,quake:0,pend:null,say:'',sayT:0,first:true,up:up,speed:1};
+  for(var t=0;t<n;t++){var best=0;cnt.forEach(function(c,k){if(c<cnt[best])best=k});cnt[best]++;TR.push(mkTrain(t+1,best))}var ix=TK.map(function(){return 0});TR.forEach(function(t){var c=cnt[t.tk],j=ix[t.tk]++;t.p=(j+.5)/c;t.dir=j%2?-1:1});
+  var crews=tw.st.length+(bought.crew||0);
+  G={i:i,tw:tw,t:0,over:false,crews:crews,maxc:crews,crewT:0,money:tw.base-cost,next:8,trains:TR,hist:{},fs:0,fn:0,chaos:0,peak:0,sug:null,sugT:0,quake:0,pend:null,say:'',sayT:0,first:true,up:up,speed:1,xtr:bought.train||0,rep:(60+10*i)/(1+(bought.crew||0)),ai:0,cs:0,ms:0};
   for(var id in S)G.hist[id]=[];
   var h='';for(var id2 in S)h+='<div class="nb"><span>'+S[id2].name+'</span><div class="bar"><i id="b-'+id2+'" style="background:'+SC[S[id2].col]+'"></i></div><b id="v-'+id2+'">0s</b></div>';
-  $('#nbs').innerHTML=h;
+  $('#nbs').innerHTML=h;var ru={};G.tw.ev.forEach(function(e){ru[e]=1});$('#risk').innerHTML=Object.keys(ru).map(function(e){return '<div class="nb"><span>'+RN[e]+'</span><div class="bar"><i id="rk-'+e+'" style="background:#ef8a3d"></i></div><b id="rv-'+e+'"></b></div>'}).join('');
   $('#tkl').innerHTML=TK.map(function(k,i){return '<span id="tk'+i+'"><i style="background:'+TKS[i]+'"></i>'+(i+1)+'</span>'}).join('');
   $('#town').textContent=tw.n;$('#ttl').textContent=tw.ttl;$('#scr').style.display='none';document.body.classList.add('play');
   ang=0;cd=tw.cd;dist=cd;$('#spd').textContent='Speed x1';
   speak('Welcome to '+tw.n+'! Keep every station moving and every worker happy.',6);suggest();
 }
 function items(tw){
-  var r=[{k:'train',n:'Extra train',d:'Joins the track with the fewest trains',c:250,max:4},{k:'crew',n:'Repair crew',d:'One more fix on hand at all times',c:200,max:4}];
-  tw.st.forEach(function(s){r.push({k:'s:'+s[0],n:'Staff at '+s[1],d:'Faster boarding, steadier morale',c:100,max:3})});
-  if(tw.ev.indexOf('fl')>=0)r.push({k:'pump',n:'Flood pumps',d:'Floods drain twice as fast',c:250,max:1});
-  if(tw.ev.indexOf('ri')>=0)r.push({k:'police',n:'Riot response team',d:'Fewer riots, shorter closures',c:250,max:2});
-  if(tw.ev.indexOf('eq')>=0)r.push({k:'seis',n:'Quake and slope reinforcement',d:'Halves quake and landslide damage',c:300,max:1});
-  if(tw.ev.indexOf('tf')>=0)r.push({k:'trim',n:'Tree-trimming crew',d:'Stops most tree-fall outages',c:250,max:1});
+  var r=[{k:'train',n:'Extra train',d:'Lowers overcrowding odds; joins the emptiest track',c:300000,max:4},{k:'crew',n:'Repair crew',d:'Halves repair time (1 free crew per station)',c:250000,max:4}];
+  tw.st.forEach(function(s){r.push({k:'s:'+s[0],n:'Staff at '+s[1],d:'Lowers overcrowding odds, lifts morale (1 free)',c:250000,max:3})});
+  if(tw.ev.indexOf('fl')>=0)r.push({k:'pump',n:'Flood pumps',d:'Floods drain twice as fast',c:150000,max:1});
+  if(tw.ev.indexOf('ri')>=0)r.push({k:'police',n:'Riot response team',d:'Fewer riots, shorter closures',c:200000,max:2});
+  if(tw.ev.indexOf('eq')>=0)r.push({k:'seis',n:'Quake and slope reinforcement',d:'Halves quake and landslide damage',c:250000,max:1});
+  if(tw.ev.indexOf('tf')>=0)r.push({k:'trim',n:'Tree-trimming crew',d:'Stops most tree-fall outages',c:200000,max:1});
   return r;
 }
 function speak(t,s){G.say=t;G.sayT=s}
@@ -286,21 +286,33 @@ function step(dt){
     if(t.down>0){t.down-=dt;return}
     var k=TK[t.tk];if(G.quake>0||k.out>0)return;
     var pts=k.pts,len=pts.length-1,j=Math.max(0,Math.min(Math.floor(t.p),len-1)),a=pts[j],b=pts[j+1],d=Math.hypot(b.x-a.x,b.z-a.z)||1;
-    t.p+=t.dir*2.4*dt/d;
+    var blk=false,gp=6.8/d;G.trains.forEach(function(u){if(u===t||u.tk!==t.tk||u.dir!==t.dir)return;var q=(u.p-t.p)*t.dir;if((q>0&&q<gp)||(q===0&&u.id<t.id))blk=true});if(blk)return;t.p+=t.dir*2.4*dt/d;
     if(t.p>=len){t.p=len;t.dir=-1}if(t.p<=0){t.p=0;t.dir=1}
     var r=Math.round(t.p);if(r!==t.last&&Math.abs(t.p-r)<.1){t.last=r;board(t,k.ids[r])}
   });
-  G.next-=dt;if(G.next<=0){spawn();G.next=G.tw.gap[0]+Math.random()*(G.tw.gap[1]-G.tw.gap[0])}
+  G.next-=dt;if(G.next<=0){spawn();G.next=1.6*(G.tw.gap[0]+Math.random()*(G.tw.gap[1]-G.tw.gap[0]))}
   if(G.crews<G.maxc){G.crewT+=dt;if(G.crewT>=15){G.crews++;G.crewT=0}}
   G.sugT-=dt;if(G.sugT<=0){suggest();if($('#auto').checked&&G.sug)apply(G.sug,true)}
   if(G.sayT>0)G.sayT-=dt;
 }
+function risks(){var cnt={},n=0,ex=0,sum=0,w={};G.tw.ev.forEach(function(e){cnt[e]=(cnt[e]||0)+1});for(var id in S){ex+=S[id].staff-1;n++}ex/=n;
+  for(var e in cnt){w[e]=cnt[e]*(e==='cr'?Math.pow(.92,G.xtr)*Math.pow(.88,ex):1);sum+=w[e]}for(e in w)w[e]/=sum;return w}
+function pick(){var w=risks(),r=Math.random(),a=0,l;for(var e in w){l=e;a+=w[e];if(r<=a)return e}return l}
+function emergency(){
+  if(!G||G.over)return;if(G.money<200000){toast('Not enough money');return}
+  var d=false,id,i;
+  for(id in S)if(!d&&S[id].closed>0){S[id].closed=0;d=true}
+  G.trains.forEach(function(t){if(!d&&t.down>0){t.down=0;d=true}});
+  TK.forEach(function(k){if(!d&&k.out>0){k.out=0;d=true}});
+  if(!d){if(G.chaos>5){G.chaos=Math.max(0,G.chaos-20)}else{toast('Nothing needs fixing');return}}
+  G.money-=200000;toast('Emergency fix! Problem solved.');
+}
 function closeSt(s,sec,kind){if(s.closed<=0){s.closed=sec;s.kind=kind}}
 function spawn(){
-  var ids=Object.keys(S),ev=G.tw.ev,e=ev[Math.floor(Math.random()*ev.length)],s=S[ids[Math.floor(Math.random()*ids.length)]],up=G.up;
+  var ids=Object.keys(S),ev=G.tw.ev,e=pick(),s=S[ids[Math.floor(Math.random()*ids.length)]],up=G.up;
   var ok=G.trains.filter(function(t){return t.down<=0});
   if(G.first){e='br';G.first=false}
-  if(e==='br'&&ok.length){var t=ok[Math.floor(Math.random()*ok.length)];t.down=16;toast('Train '+t.id+' broke down!');speak('Train '+t.id+' broke down! A crew can fix it fast.',6)}
+  if(e==='br'&&ok.length&&G.trains.length-ok.length<Math.ceil(G.trains.length/2)){var t=ok[Math.floor(Math.random()*ok.length)];t.down=G.rep;toast('Train '+t.id+' broke down!');speak('Train '+t.id+' broke down! A crew can fix it fast.',6)}
   else if(e==='fl'){closeSt(s,20*(up.pump?.5:1),'fl');toast('Flooding at '+s.name+'!');speak(s.name+' is flooding. Riders head to the nearest open station.',6)}
   else if(e==='ri'){
     var w=ids.map(function(i){return S[i]}).sort(function(a,b){return a.m-b.m})[0];
@@ -354,7 +366,7 @@ function suggest(){
   G.sug=best;
 }
 function apply(s,quiet){
-  if(!s)return;
+  if(!s)return;G.ai++;
   if(s.kind==='st')fix(s.id);else if(s.kind==='tr')fixT(s.t);else if(s.kind==='tk')fixK(s.k);else if(s.kind==='mo')lift(s.id);else sw(s.t,s.to);
   if(quiet)speak('I took care of that!',3);
   suggest();
@@ -365,7 +377,7 @@ function sw(t,to){
 }
 function spend(){if(G.crews>0){G.crews--;return true}toast('No repair crews left');return false}
 function fix(id){var s=S[id];if(s.closed>0&&spend())s.closed=0}
-function fixT(t){if(t.down>0&&spend())t.down=0}
+function fixT(t){if(t.down>0){if(G.money<75000){toast('Instant repair costs $75k');return}if(spend()){G.money-=75000;t.down=0}}}
 function fixK(k){if(k.out>0&&spend())k.out=0}
 function lift(id){if(spend())S[id].m=Math.min(100,S[id].m+40)}
 function stClick(id){var s=S[id];if(s.closed>0)fix(id);else if(s.m<70)lift(id);suggest()}
@@ -373,18 +385,42 @@ function stClick(id){var s=S[id];if(s.closed>0)fix(id);else if(s.m<70)lift(id);s
 // ---- screens
 var bought={},sel=0;
 function finish(win){
-  G.over=true;var fa=G.fn?G.fs/G.fn:100,stars=0;
-  if(win){stars=fa>=70&&G.peak<60?3:fa>=50?2:1;prog.stars[G.i]=Math.max(prog.stars[G.i],stars);if(G.i+1<TW.length)prog.open=Math.max(prog.open,G.i+2);save()}
-  var h=win?'<h1>Town saved!</h1><p>'+G.tw.n+' ran smoothly for '+fmt(TIME)+'. '+'★'.repeat(stars)+'☆'.repeat(3-stars)+'</p>':'<h1>Catastrophe!</h1><p>'+G.tw.n+' ground to a halt.</p>';
-  h+='<p class="small">Average fairness '+Math.round(fa)+' of 100. Peak catastrophe meter '+Math.round(G.peak)+'%. Budget left $'+G.money+'.'+(win&&stars<3?' Keep every station served for 3 stars.':'')+'</p><div class="btns"><button class="btn" id="re">Rebuild and retry</button>'+(win&&G.i+1<TW.length?'<button class="btn" id="nx">Next town</button>':'')+'<button class="btn gray" id="mn">Town map</button></div>';
+  G.over=true;var t=Math.max(1,G.t),fa=G.fn?G.fs/G.fn:100,ac=G.cs/t,am=G.ms/t;
+  var L=['Survived the full 10 minutes','Average disaster level under 10% ('+Math.round(ac)+'%)','Fairness 80 or higher ('+Math.round(fa)+')','Station morale 75 or higher ('+Math.round(am)+')','Used the bot 10 times or fewer ('+G.ai+')'],
+  ok=[win,win&&ac<10,win&&fa>=80,win&&am>=75,win&&G.ai<=10],stars=ok.filter(Boolean).length;
+  if(win){prog.stars[G.i]=Math.max(prog.stars[G.i],stars);if(G.i+1<TW.length)prog.open=Math.max(prog.open,G.i+2);save()}
+  var h=win?'<h1>Town saved!</h1><p>'+G.tw.n+' ran smoothly. '+'★'.repeat(stars)+'☆'.repeat(5-stars)+'</p>':'<h1>Catastrophe!</h1><p>'+G.tw.n+' ground to a halt.</p>';
+  if(win)h+='<ul class="small" style="padding-left:18px;margin:6px 0">'+L.map(function(x,k){return '<li>'+(ok[k]?'★ ':'☆ ')+x+'</li>'}).join('')+'</ul>';
+  h+='<p class="small">Budget left '+mny(G.money)+'. Peak catastrophe meter '+Math.round(G.peak)+'%.</p><div class="btns"><button class="btn" id="re">Rebuild and retry</button>'+(win&&G.i+1<TW.length?'<button class="btn" id="nx">Next town</button>':'')+'<button class="btn gray" id="mn">Town map</button></div>';
   $('#scrc').innerHTML=h;$('#scr').style.display='flex';
   $('#re').onclick=function(){brief(G.i)};if($('#nx'))$('#nx').onclick=function(){brief(G.i+1)};$('#mn').onclick=world;
+}
+function mapSvg(){
+  var s=7,r=function(){s=(s*16807)%2147483647;return s/2147483647},C=[[16,41],[36,18],[55,44],[76,18],[88,42]],F=['#7dbb6a','#ecdca4','#c9ccbd','#cdbfa3','#a9b7cc'],
+  h='<svg viewBox="0 0 100 66" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="66" fill="#bccbd0"/><path d="M0 8Q20 2 40 9T100 5M0 58Q30 64 55 57T100 62" stroke="#a7bcc4" fill="none" stroke-width=".4"/>';
+  var P=C.map(function(c){var a=[];for(var k=0;k<16;k++){var an=k/16*6.283,q=.85+r()*.25;a.push((c[0]+Math.cos(an)*19*q).toFixed(1)+','+(c[1]+Math.sin(an)*15*q).toFixed(1))}return a.join(' ')});
+  TW.forEach(function(t,i){
+    var ok=i<prog.open,c=C[i],k;
+    h+='<clipPath id="c'+i+'"><polygon points="'+P[i]+'"/></clipPath><polygon points="'+P[i]+'" fill="'+(ok?F[i]:'#a5adb3')+'" stroke="'+(ok?'#fff':'#8a939a')+'" stroke-width=".5"'+(ok?'':' stroke-dasharray="1 .8"')+'/>';
+    if(!ok)return;
+    h+='<g clip-path="url(#c'+i+')">';
+    if(i==0||i==4)for(k=0;k<36;k++)h+='<circle cx="'+(c[0]-20+r()*40).toFixed(1)+'" cy="'+(c[1]-16+r()*32).toFixed(1)+'" r="1" fill="'+(k%3?'#2f7a3f':'#3f9a4a')+'"/>';
+    if(i==0)h+='<ellipse cx="'+c[0]+'" cy="'+c[1]+'" rx="7" ry="4" fill="#a9dc8f"/><rect x="'+(c[0]-5)+'" y="'+(c[1]-.5)+'" width="10" height="1" fill="#6b6f78"/>';
+    if(i==1)h+='<rect x="14" y="'+(c[1]+3)+'" width="46" height="20" fill="#e6cf8c"/><rect x="14" y="'+(c[1]+8)+'" width="46" height="20" fill="#5fb4e6"/><path d="M16 '+(c[1]+11)+'q3-1 6 0t6 0t6 0t6 0t6 0t6 0t6 0" stroke="#fff" fill="none" stroke-width=".4"/>';
+    if(i==2)for(var gx=0;gx<5;gx++)for(var gy=0;gy<4;gy++)h+='<rect x="'+(c[0]-9+gx*3.8)+'" y="'+(c[1]-7+gy*3.8)+'" width="3" height="3" fill="'+((gx+gy)%2?'#8c97a6':'#a8b2bf')+'"/>';
+    if(i==3){for(k=0;k<5;k++){var x=c[0]-15+k*7;h+='<polygon points="'+(x-5)+','+(c[1]-2)+' '+x+','+(c[1]-14)+' '+(x+5)+','+(c[1]-2)+'" fill="#8a8f99"/><polygon points="'+(x-1.6)+','+(c[1]-10.5)+' '+x+','+(c[1]-14)+' '+(x+1.6)+','+(c[1]-10.5)+'" fill="#fff"/>'}
+      for(k=0;k<6;k++)h+='<rect x="'+(c[0]+3+k%3*3.6)+'" y="'+(c[1]+3+Math.floor(k/3)*3.6)+'" width="3" height="3" fill="#8c97a6"/>'}
+    if(i==4){var sp=[];for(k=0;k<10;k++){var an=(-90+36*k)*Math.PI/180,rr=k%2?4.5:10;sp.push((c[0]+Math.cos(an)*rr).toFixed(1)+','+(c[1]+Math.sin(an)*rr).toFixed(1))}h+='<polygon points="'+sp.join(' ')+'" fill="#7e8da8" stroke="#5f6e8a" stroke-width=".3"/>'}
+    h+='</g>';
+  });
+  for(var k=0;k<4;k++)h+='<line x1="'+C[k][0]+'" y1="'+C[k][1]+'" x2="'+C[k+1][0]+'" y2="'+C[k+1][1]+'" stroke="'+(k+1<prog.open?'#fff':'#98a1a8')+'" stroke-width=".6" stroke-dasharray="1.3 1"/>';
+  return h+'</svg>';
 }
 function world(){
   document.body.classList.remove('play');G=null;if(root){scene.remove(root);root=null}
   [].forEach.call(document.querySelectorAll('.lb'),function(n){n.remove()});scene.background=new T.Color(0xcfe8d5);
-  var pos=[[16,62],[36,28],[55,66],[76,28],[88,64]],h='<h1>Subway God</h1><p class="small">Pick a town. Each one is its own puzzle, and the next stays hidden until you beat it.</p><div class="wmap">';
-  TW.forEach(function(t,i){var ok=i<prog.open;h+='<button class="pin" data-i="'+i+'" style="left:'+pos[i][0]+'%;top:'+pos[i][1]+'%"'+(ok?'':' disabled')+'><span class="ic">'+(ok?t.ic:'🔒')+'</span><b>'+(ok?t.n:'???')+'</b><span class="small">'+(ok?t.ttl:'Locked')+'</span><span>'+(ok?'★'.repeat(prog.stars[i])+'☆'.repeat(3-prog.stars[i]):'')+'</span></button>'});
+  var pos=[[16,62],[36,28],[55,66],[76,28],[88,64]],h='<h1>Subway God</h1><p class="small">Pick a town. Each one is its own puzzle, and the next stays hidden until you beat it.</p><div class="wmap">'+mapSvg();
+  TW.forEach(function(t,i){var ok=i<prog.open;h+='<button class="pin" data-i="'+i+'" style="left:'+pos[i][0]+'%;top:'+pos[i][1]+'%"'+(ok?'':' disabled')+'><span class="ic">'+(ok?t.ic:'🔒')+'</span><b>'+(ok?t.n:'???')+'</b><span class="small">'+(ok?t.ttl:'Locked')+'</span><span>'+(ok?'★'.repeat(prog.stars[i])+'☆'.repeat(5-prog.stars[i]):'')+'</span></button>'});
   $('#scrc').innerHTML=h+'</div>';$('#scr').style.display='flex';
   [].forEach.call(document.querySelectorAll('.pin'),function(b){b.onclick=function(){brief(+b.dataset.i)}});
 }
@@ -392,9 +428,9 @@ function brief(i){
   var tw=TW[i],its=items(tw);bought={};
   function render(){
     var spent=0;its.forEach(function(it){spent+=(bought[it.k]||0)*it.c});
-    var h='<h2 style="font-size:24px;margin:0">'+tw.n+'</h2><p class="small" style="margin:2px 0 8px">'+tw.ttl+'. '+tw.size+', '+tw.st.length+' stations, '+tw.tk.length+' tracks. '+tw.nw+'</p><div class="row"><b>Build budget</b><b id="bm">$'+(tw.base-spent)+'</b></div><div class="shop">';
-    its.forEach(function(it,j){var n=bought[it.k]||0;h+='<div class="it"><div><b>'+it.n+'</b> <span class="small">$'+it.c+'</span><br><span class="small">'+it.d+'</span></div><div class="stp"><button data-j="'+j+'" data-d="-1"'+(n?'':' disabled')+'>-</button><b>'+n+'</b><button data-j="'+j+'" data-d="1"'+(n>=it.max||tw.base-spent<it.c?' disabled':'')+'>+</button></div></div>'});
-    h+='</div><p class="small">Unspent money stays on hand for $150 emergency crews during the round.</p><div class="btns"><button class="btn" id="go">Start the shift</button><button class="btn gray" id="bk">Town map</button></div>';
+    var h='<h2 style="font-size:24px;margin:0">'+tw.n+'</h2><p class="small" style="margin:2px 0 8px">'+tw.ttl+'. '+tw.size+', '+tw.st.length+' stations, '+tw.tk.length+' tracks. '+tw.nw+'</p><div class="row"><b>Build budget</b><b id="bm">'+mny(tw.base-spent)+'</b></div><div class="shop">';
+    its.forEach(function(it,j){var n=bought[it.k]||0;h+='<div class="it"><div><b>'+it.n+'</b> <span class="small">'+mny(it.c)+'</span><br><span class="small">'+it.d+'</span></div><div class="stp"><button data-j="'+j+'" data-d="-1"'+(n?'':' disabled')+'>-</button><b>'+n+'</b><button data-j="'+j+'" data-d="1"'+(n>=it.max||tw.base-spent<it.c?' disabled':'')+'>+</button></div></div>'});
+    h+='</div><p class="small">Unspent money pays for $200k emergency fixes and $75k instant train repairs during the round. Every station starts with 1 free staff crew and 1 repair crew.</p><div class="btns"><button class="btn" id="go">Start the shift</button><button class="btn gray" id="bk">Town map</button></div>';
     $('#scrc').innerHTML=h;
     [].forEach.call(document.querySelectorAll('.stp button'),function(b){b.onclick=function(){var it=its[+b.dataset.j];bought[it.k]=(bought[it.k]||0)+ +b.dataset.d;render()}});
     $('#go').onclick=function(){init(i,bought)};$('#bk').onclick=world;
@@ -416,8 +452,8 @@ ren.domElement.addEventListener('pointerup',function(e){
 function setMode(m){mode=m;$('#m-avg').setAttribute('aria-pressed',m==='avg');$('#m-fair').setAttribute('aria-pressed',m==='fair');if(G)suggest()}
 $('#m-avg').onclick=function(){setMode('avg')};$('#m-fair').onclick=function(){setMode('fair')};
 $('#accept').onclick=function(){apply(G.sug,false)};
-$('#emg').onclick=function(){if(G&&!G.over){if(G.money>=150){G.money-=150;G.crews++}else toast('Not enough money')}};
-$('#spd').onclick=function(){if(G){G.speed=G.speed===1?3:1;$('#spd').textContent='Speed x'+G.speed}};
+$('#emg').onclick=emergency;
+$('#spd').onclick=function(){if(G){G.speed=G.speed%4+1;$('#spd').textContent='Speed x'+G.speed}};
 $('#exit').onclick=world;
 
 // ---- render
@@ -430,7 +466,7 @@ function frame(now){
       var w=waits();G.w=w;
       if(w.n>5){G.fs+=w.fair;G.fn++}
       var st=0;if(w.avg>30)st+=(w.avg-30)/30;if(w.mx>45)st+=(w.mx-45)/45;for(var id in S){if(S[id].q.length>55)st+=.4;if(S[id].m<25)st+=.3}
-      G.chaos=Math.max(0,Math.min(100,G.chaos+(st*3-1.2)*sd));G.peak=Math.max(G.peak,G.chaos);
+      G.chaos=Math.max(0,Math.min(100,G.chaos+(st*3-1.2)*sd));G.peak=Math.max(G.peak,G.chaos);var am=0,nn=0;for(var q in S){am+=S[q].m;nn++}G.ms+=am/nn*sd;G.cs+=G.chaos*sd;
       if(G.chaos>=100)finish(false);else if(G.t>=TIME)finish(true);
     }
     var w2=G.w||waits();
@@ -453,7 +489,7 @@ function frame(now){
     });
     G.trains.forEach(function(t){
       var pts=TK[t.tk].pts,j=Math.max(0,Math.min(Math.floor(t.p),pts.length-2)),f=t.p-j,a=pts[j],b=pts[j+1];
-      t.g.position.set(a.x+(b.x-a.x)*f,.2,a.z+(b.z-a.z)*f);
+      var dd=Math.hypot(b.x-a.x,b.z-a.z)||1,tl=t.dir>0?.5:-.5;if(t.lane==null)t.lane=tl;t.lane+=(tl-t.lane)*Math.min(1,dt*3);t.g.position.set(a.x+(b.x-a.x)*f-(b.z-a.z)/dd*t.lane,.2,a.z+(b.z-a.z)*f+(b.x-a.x)/dd*t.lane);
       t.g.rotation.y=-Math.atan2((b.z-a.z)*t.dir,(b.x-a.x)*t.dir);
       var bad=t.down>0||TK[t.tk].out>0?1:0;
       if(t.vis!==bad){t.vis=bad;t.mats.forEach(function(m){m.color.setHex(bad?0x777d85:TKC[t.tk])})}
@@ -463,8 +499,8 @@ function frame(now){
     $('#clock').textContent=fmt(TIME-G.t);
     $('#chaos').style.width=G.chaos+'%';
     $('#crews').textContent='Crews '+'●'.repeat(Math.min(G.crews,8))+'○'.repeat(Math.max(0,G.maxc-G.crews));
-    $('#money').textContent='$'+G.money;$('#emg').disabled=G.money<150;
-    $('#fair').textContent=Math.round(w2.fair);
+    $('#money').textContent=mny(G.money);$('#emg').disabled=G.money<200000;
+    $('#fair').textContent=Math.round(w2.fair);var rw=risks();for(var e9 in rw){$('#rk-'+e9).style.width=rw[e9]*100+'%';$('#rv-'+e9).textContent=Math.round(rw[e9]*100)+'%'}$('#aiu').textContent='Bot actions: '+G.ai+' / 10 (5th star)';
     var worst=null,wv=0;
     for(var id3 in S){var v=w2.by[id3];if(v>wv){wv=v;worst=id3}$('#b-'+id3).style.width=Math.min(100,v/60*100)+'%';$('#v-'+id3).textContent=Math.round(v)+'s'}
     $('#alert').textContent=(worst&&w2.avg>1&&wv>w2.avg*1.8&&wv>20)?S[worst].name+' waits '+(wv/w2.avg).toFixed(1)+'x longer than average.':'';
