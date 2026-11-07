@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Subway God</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e3e7ea;--panel:#f5f6f7;--ink:#101828;--mute:#5b6676;--rule:#c5ccd3;--dt:#b7791f;--hl:#2f855a;--hb:#2b6cb0;--ng:#c53030;--la:#0f766e;--lb:#7e3fc4;--ok:#2f855a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1319;--panel:#18202a;--ink:#e8ecf1;--mute:#93a0b1;--rule:#2b3643;--dt:#e0a93b;--hl:#4cb27f;--hb:#5aa0e6;--ng:#f06b6b;--la:#2fb5a9;--lb:#b184f0}}
+:root[data-theme="dark"]{--bg:#0e1319;--panel:#18202a;--ink:#e8ecf1;--mute:#93a0b1;--rule:#2b3643;--dt:#e0a93b;--hl:#4cb27f;--hb:#5aa0e6;--ng:#f06b6b;--la:#2fb5a9;--lb:#b184f0}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Archivo,system-ui,sans-serif;font-size:15px;line-height:1.45;padding:16px}
+h1{font-size:34px;font-weight:800;font-stretch:75%;letter-spacing:-.01em;margin:0}
+h2{font-size:16px;font-weight:700;margin:0 0 8px}
+header{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;max-width:1100px;margin:0 auto 12px}
+header p{margin:2px 0 0;color:var(--mute);max-width:56ch}
+.clock{font-size:30px;font-weight:700;font-stretch:80%;font-variant-numeric:tabular-nums}
+main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:14px;max-width:1100px;margin:0 auto}
+@media(max-width:820px){main{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px;margin-bottom:14px}
+svg{width:100%;height:auto;display:block;touch-action:manipulation}
+.hint{color:var(--mute);font-size:13px;margin:6px 0 0}
+.seg{display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin-bottom:10px}
+.seg button{flex:1;border:0;background:transparent;color:var(--ink);padding:8px;font:inherit;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--panel);font-weight:700}
+button:focus-visible{outline:3px solid var(--hb);outline-offset:2px}
+.sug{border-left:4px solid var(--la);padding:4px 0 4px 10px;margin:8px 0 10px}
+.sug b{display:block;font-size:16px}
+.sug span{color:var(--mute);font-size:13px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--panel);border-radius:8px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer}
+.btn:disabled{opacity:.4;cursor:default}
+.auto{display:flex;gap:6px;align-items:center;cursor:pointer}
+.nb{display:grid;grid-template-columns:84px 1fr 52px;gap:8px;align-items:center;margin:7px 0}
+.bar{height:12px;background:var(--rule);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:6px;transition:width .4s}
+.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.stats{display:flex;gap:18px;margin-bottom:6px}
+.stats div{font-size:13px;color:var(--mute)}
+.stats b{display:block;font-size:26px;font-stretch:80%;color:var(--ink);font-variant-numeric:tabular-nums}
+.alert{background:color-mix(in srgb,var(--ng) 16%,transparent);border:1px solid var(--ng);border-radius:8px;padding:8px 10px;margin-top:10px;font-weight:600}
+.log{list-style:none;margin:0;padding:0;font-size:13px}
+.log li{padding:4px 0;border-top:1px solid var(--rule)}
+.log time{color:var(--mute);margin-right:8px;font-variant-numeric:tabular-nums}
+.over{position:fixed;inset:0;background:rgba(10,14,20,.7);display:none;align-items:center;justify-content:center;padding:16px;z-index:5}
+.over.on{display:flex}
+.over .card{max-width:440px;margin:0}
+.over h2{font-size:24px}
+.st text{font-size:11px;font-weight:600;fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:3px;text-anchor:middle}
+.tr{cursor:pointer}
+@media(prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Subway God</h1>
+    <p>Keep the city moving through breakdowns, floods and surges. Your dispatcher is fast. Is it fair?</p>
+  </div>
+  <div class="clock" id="clock" aria-label="Shift time left">2:30</div>
+</header>
+<main>
+  <section>
+    <div class="card">
+      <svg id="map" viewBox="0 0 620 420" role="img" aria-label="Subway map with two lines and eight stations"></svg>
+      <p class="hint">Tap a healthy train to switch its line. Tap a closed station or broken train to spend a repair crew.</p>
+    </div>
+    <div class="card">
+      <h2>Incident feed</h2>
+      <ul class="log" id="log"></ul>
+    </div>
+  </section>
+  <section>
+    <div class="card">
+      <h2>AI dispatcher</h2>
+      <div class="seg" role="group" aria-label="Dispatcher goal">
+        <button id="m-avg" aria-pressed="true">Fastest average</button>
+        <button id="m-fair" aria-pressed="false">Fair to all</button>
+      </div>
+      <div class="sug"><b id="sug-t">Thinking…</b><span id="sug-w"></span></div>
+      <div class="row">
+        <button class="btn" id="accept">Accept suggestion</button>
+        <label class="auto"><input type="checkbox" id="auto"> Let it drive</label>
+      </div>
+      <p class="hint" id="crews" style="margin-top:10px"></p>
+    </div>
+    <div class="card">
+      <h2>How each neighborhood is doing</h2>
+      <div class="stats">
+        <div>City average wait<b id="avg">0s</b></div>
+        <div>Fairness<b id="fair">100</b></div>
+      </div>
+      <div id="nbs"></div>
+      <div class="alert" id="alert" hidden></div>
+    </div>
+  </section>
+</main>
+<div class="over" id="over" role="dialog" aria-modal="true" aria-labelledby="ot">
+  <div class="card">
+    <h2 id="ot">Shift over</h2>
+    <div id="sum"></div>
+    <button class="btn" id="again" style="margin-top:12px">Start new shift</button>
+  </div>
+</div>
+<script>
+(function(){
+var SHIFT=150,CAP=25,SPEED=0.3;
+var NB={dt:['Downtown','--dt'],hl:['Hillside','--hl'],hb:['Harbor','--hb'],ng:['Northgate','--ng']};
+var DEF=[
+['W1','Hillside N','hl',60,330,1.2,'W2'],['W2','Hillside S','hl',180,270,1.4,'W1'],
+['X','Central Hub','dt',300,210,3.2,'S1'],['S1','Downtown S','dt',415,255,2.2,'X'],
+['E1','Harbor Docks','hb',505,315,1.8,'E2'],['E2','Harbor Point','hb',565,385,1.6,'E1'],
+['N1','Northgate Mill','ng',275,130,0.5,'N2'],['N2','Northgate Park','ng',250,50,0.4,'N1']];
+var L={A:['W1','W2','X','S1','E1','E2'],B:['N2','N1','X']};
+var LN={A:'Line A (Hillside, Downtown, Harbor)',B:'Line B (Northgate)'};
+var LC={A:'var(--la)',B:'var(--lb)'};
+var S={},G,mode='avg',NS='http://www.w3.org/2000/svg';
+function $(s){return document.querySelector(s)}
+function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function fmt(t){t=Math.max(0,Math.ceil(t));return Math.floor(t/60)+':'+('0'+t%60).slice(-2)}
+
+function init(){
+  DEF.forEach(function(d){S[d[0]]={id:d[0],name:d[1],n:d[2],x:d[3],y:d[4],rate:d[5],sib:d[6],q:[],closed:0,acc:0}});
+  var T=[];[['A',0],['A',2.5],['A',4.5],['B',0],['B',1.5]].forEach(function(a,i){T.push({id:i+1,line:a[0],p:a[1],dir:1,down:0,last:-1})});
+  G={t:0,over:false,crews:2,crewT:0,next:5,log:[],trains:T,hist:{dt:[],hl:[],hb:[],ng:[]},fs:0,fn:0,sug:null,sugT:0,first:true};
+  $('#over').classList.remove('on');
+  logMsg('Shift started. Trains are running.');
+  suggest();
+}
+function logMsg(m){G.log.unshift({t:G.t,m:m});G.log.length=Math.min(G.log.length,6)}
+
+// ---- simulation
+function board(t,id){
+  var s=S[id];if(s.closed>0)return;
+  var n=Math.min(CAP,s.q.length);
+  for(var i=0;i<n;i++){var a=s.q.shift();G.hist[s.n].push({t:G.t,w:G.t-a})}
+}
+function arrive(s){
+  var tgt=s;
+  if(s.closed>0&&S[s.sib].closed<=0)tgt=S[s.sib];
+  tgt.q.push(G.t);
+}
+function step(dt){
+  G.t+=dt;
+  for(var id in S){var s=S[id];s.acc+=s.rate*dt*(0.7+Math.random()*0.6);while(s.acc>=1){s.acc--;arrive(s)};if(s.closed>0)s.closed-=dt}
+  G.trains.forEach(function(t){
+    if(t.down>0){t.down-=dt;return}
+    var len=L[t.line].length-1;
+    t.p+=t.dir*SPEED*dt;
+    if(t.p>=len){t.p=len;t.dir=-1}
+    if(t.p<=0){t.p=0;t.dir=1}
+    var r=Math.round(t.p);
+    if(r!==t.last&&Math.abs(t.p-r)<0.06){t.last=r;board(t,L[t.line][r])}
+  });
+  G.next-=dt;
+  if(G.next<=0){spawn();G.next=9+Math.random()*7}
+  if(G.crews<3){G.crewT+=dt;if(G.crewT>=14){G.crews++;G.crewT=0}}
+  var w=waits();
+  if(w.n>5){G.fs+=w.fair;G.fn++}
+  G.sugT-=dt;
+  if(G.sugT<=0){suggest();if($('#auto').checked&&G.sug)apply(G.sug,true)}
+  if(G.t>=SHIFT)finish();
+}
+function spawn(){
+  var ids=Object.keys(S),r=Math.random(),ok=G.trains.filter(function(t){return t.down<=0});
+  var s=S[ids[Math.floor(Math.random()*ids.length)]];
+  if(G.first){r=0;G.first=false}
+  if(r<.3&&ok.length){var t=ok[Math.floor(Math.random()*ok.length)];t.down=16;logMsg('Train '+t.id+' broke down on '+LN[t.line].split(' (')[0]+'.')}
+  else if(r<.55){if(s.closed<=0)s.closed=18;logMsg('Flooding closed '+s.name+'.')}
+  else if(r<.75){if(s.closed<=0)s.closed=14;logMsg(s.name+' closed for an emergency.')}
+  else{for(var i=0;i<35;i++)s.q.push(G.t);logMsg('Crowd surge: 35 riders arrive at '+s.name+'.')}
+}
+function waits(){
+  var out={},ts=0,tn=0,vals=[];
+  for(var k in NB){
+    G.hist[k]=G.hist[k].filter(function(h){return h.t>G.t-45});
+    var sum=0,n=0;
+    G.hist[k].forEach(function(h){sum+=h.w;n++});
+    for(var id in S){if(S[id].n===k)S[id].q.forEach(function(a){sum+=G.t-a;n++})}
+    out[k]=n?sum/n:0;ts+=sum;tn+=n;
+    vals.push(out[k]);
+  }
+  var avg=tn?ts/tn:0,mx=Math.max.apply(null,vals);
+  var m=vals.reduce(function(a,b){return a+b},0)/vals.length;
+  return {by:out,avg:avg,n:tn,fair:mx>1?Math.min(1,m/mx)*100:100};
+}
+
+// ---- dispatcher
+function cnt(line){return G.trains.filter(function(t){return t.line===line&&t.down<=0}).length}
+function pressure(line,wt){
+  var p=0;L[line].forEach(function(id){var s=S[id];if(s.closed>0)return;p+=s.q.length*wt[s.n]*(id==='X'?.5:1)});
+  return p;
+}
+function cost(pa,pb,ka,kb){return pa/Math.max(.5,ka)+pb/Math.max(.5,kb)}
+function suggest(){
+  G.sugT=3;
+  var w=waits(),wt={};
+  for(var k in NB)wt[k]=mode==='fair'&&w.avg>1?Math.min(4,Math.max(.5,w.by[k]/w.avg)):1;
+  if(mode==='fair')for(var j in wt)wt[j]=Math.pow(wt[j],1.5);
+  var pa=pressure('A',wt),pb=pressure('B',wt),ka=cnt('A'),kb=cnt('B'),why=mode==='fair'?'Protects the neighborhood waiting longest.':'Clears the most riders per minute.';
+  var best=null;
+  if(G.crews>0){
+    var cands=[];
+    for(var id in S)if(S[id].closed>0)cands.push({kind:'st',id:id,sc:30+S[id].q.length*wt[S[id].n],text:'Send a repair crew to '+S[id].name});
+    G.trains.forEach(function(t){if(t.down>0)cands.push({kind:'tr',t:t,sc:30+(t.line==='A'?pa:pb),text:'Send a repair crew to Train '+t.id})});
+    cands.sort(function(a,b){return b.sc-a.sc});
+    if(cands.length){best=cands[0];best.why=why}
+  }
+  if(!best){
+    var base=cost(pa,pb,ka,kb),bc=base*.92,bt=null;
+    G.trains.forEach(function(t){
+      if(t.down>0)return;
+      var f=t.line,o=f==='A'?'B':'A',kf=cnt(f);
+      if(mode==='fair'&&kf<=1)return;
+      var na=f==='A'?ka-1:ka+1,nb=f==='A'?kb+1:kb-1,c=cost(pa,pb,na,nb);
+      if(c<bc){bc=c;bt=t}
+    });
+    if(bt){var to=bt.line==='A'?'B':'A';best={kind:'sw',t:bt,text:'Move Train '+bt.id+' to '+LN[to].split(' (')[0],why:why}}
+  }
+  G.sug=best;
+}
+function apply(s,quiet){
+  if(!s)return;
+  if(s.kind==='st'){if(G.crews>0&&S[s.id].closed>0){G.crews--;S[s.id].closed=0;logMsg((quiet?'Dispatcher: ':'')+'Crew reopened '+S[s.id].name+'.')}}
+  else if(s.kind==='tr'){if(G.crews>0&&s.t.down>0){G.crews--;s.t.down=0;logMsg((quiet?'Dispatcher: ':'')+'Crew repaired Train '+s.t.id+'.')}}
+  else sw(s.t,quiet);
+  suggest();
+}
+function sw(t,quiet){
+  t.line=t.line==='A'?'B':'A';t.p=L[t.line].indexOf('X');t.last=t.p;t.dir=1;
+  logMsg((quiet?'Dispatcher: ':'')+'Train '+t.id+' moved to '+LN[t.line].split(' (')[0]+'.');
+}
+
+// ---- UI
+var svg=$('#map'),sEl={},tEl={};
+function build(){
+  svg.innerHTML='';
+  for(var l in L){el('polyline',{points:L[l].map(function(i){return S[i].x+','+S[i].y}).join(' '),fill:'none',style:'stroke:'+LC[l],'stroke-width':8,'stroke-linecap':'round','stroke-linejoin':'round',opacity:.85},svg)}
+  for(var id in S){
+    var s=S[id],g=el('g',{class:'st'},svg);g.style.cursor='pointer';
+    var ring=el('circle',{cx:s.x,cy:s.y,r:13,style:'fill:var(--panel);stroke:var(--'+NB[s.n][1].slice(2)+');stroke-width:5'},g);
+    var x=el('path',{d:'M'+(s.x-7)+' '+(s.y-7)+'l14 14m0-14l-14 14',style:'stroke:var(--ng);stroke-width:3',visibility:'hidden'},g);
+    var q=el('text',{x:s.x,y:s.y+4,style:'font-size:10px;stroke:none;fill:var(--ink)'},g);
+    var nm=el('text',{x:s.x,y:s.y-20},g);nm.textContent=s.name;
+    sEl[id]={ring:ring,x:x,q:q};
+    (function(id){g.addEventListener('click',function(){var s=S[id];if(s.closed>0){if(G.crews>0){G.crews--;s.closed=0;logMsg('Crew reopened '+s.name+'.');suggest()}else logMsg('No repair crews left.')}})})(id);
+  }
+  G.trains.forEach(function(t){
+    var g=el('g',{class:'tr'},svg);
+    var r=el('rect',{x:-14,y:-10,width:28,height:20,rx:6,style:'stroke:var(--ink);stroke-width:2'},g);
+    var tx=el('text',{x:0,y:4,style:'font-size:12px;font-weight:800;text-anchor:middle;fill:#fff'},g);tx.textContent=t.id;
+    tEl[t.id]={g:g,r:r};
+    g.addEventListener('click',function(){
+      if(t.down>0){if(G.crews>0){G.crews--;t.down=0;logMsg('Crew repaired Train '+t.id+'.');suggest()}else logMsg('No repair crews left.')}
+      else{sw(t);suggest()}
+    });
+  });
+}
+function render(){
+  var w=waits();
+  for(var id in S){var s=S[id],e=sEl[id];e.q.textContent=s.q.length;e.x.setAttribute('visibility',s.closed>0?'visible':'hidden');e.q.setAttribute('visibility',s.closed>0?'hidden':'visible')}
+  G.trains.forEach(function(t){
+    var line=L[t.line],i=Math.min(Math.floor(t.p),line.length-1),f=t.p-i,a=S[line[i]],b=S[line[Math.min(i+1,line.length-1)]];
+    var x=a.x+(b.x-a.x)*f,y=a.y+(b.y-a.y)*f+14;
+    tEl[t.id].g.setAttribute('transform','translate('+x+','+y+')');
+    tEl[t.id].r.style.fill=t.down>0?'#6b7280':LC[t.line];
+    tEl[t.id].g.style.opacity=t.down>0?.8:1;
+  });
+  $('#clock').textContent=fmt(SHIFT-G.t);
+  $('#avg').textContent=Math.round(w.avg)+'s';
+  $('#fair').textContent=Math.round(w.fair);
+  var h='',worst=null,wv=0;
+  for(var k in NB){
+    var v=w.by[k];if(v>wv){wv=v;worst=k}
+    h+='<div class="nb"><span>'+NB[k][0]+'</span><div class="bar"><i style="width:'+Math.min(100,v/60*100)+'%;background:var('+NB[k][1]+')"></i></div><span class="num">'+Math.round(v)+'s</span></div>';
+  }
+  $('#nbs').innerHTML=h;
+  var al=$('#alert');
+  if(worst&&w.avg>1&&wv>w.avg*1.8&&wv>20){al.hidden=false;al.textContent=NB[worst][0]+' waits '+(wv/w.avg).toFixed(1)+'x longer than the city average.'+(mode==='avg'?' The average still looks fine.':'')}
+  else al.hidden=true;
+  var sg=G.sug;
+  $('#sug-t').textContent=sg?sg.text:'Hold steady. No move improves service.';
+  $('#sug-w').textContent=sg?sg.why:'';
+  $('#accept').disabled=!sg;
+  $('#crews').textContent='Repair crews: '+G.crews+' of 3'+(G.crews<3?' (next in '+Math.ceil(14-G.crewT)+'s)':'');
+  $('#log').innerHTML=G.log.map(function(e){return '<li><time>'+fmt(e.t)+'</time>'+e.m+'</li>'}).join('');
+}
+function finish(){
+  G.over=true;var w=waits(),worst=null,wv=0;
+  for(var k in NB)if(w.by[k]>wv){wv=w.by[k];worst=k}
+  var fa=G.fn?G.fs/G.fn:100;
+  $('#sum').innerHTML='<p>City average wait at close: <b>'+Math.round(w.avg)+'s</b>. Average fairness over the shift: <b>'+Math.round(fa)+'</b> out of 100.</p><p>Longest wait: <b>'+NB[worst][0]+'</b> at '+Math.round(wv)+'s.</p><p>Try the other dispatcher goal and compare.</p>';
+  $('#over').classList.add('on');
+}
+function setMode(m){mode=m;$('#m-avg').setAttribute('aria-pressed',m==='avg');$('#m-fair').setAttribute('aria-pressed',m==='fair');if(G)suggest()}
+$('#m-avg').onclick=function(){setMode('avg')};
+$('#m-fair').onclick=function(){setMode('fair')};
+$('#accept').onclick=function(){apply(G.sug,false)};
+$('#again').onclick=function(){init();build()};
+
+var last=performance.now();
+function loop(now){
+  var dt=Math.min(.25,(now-last)/1000);last=now;
+  if(!G.over){var n=Math.max(1,Math.round(dt/.05));for(var i=0;i<n;i++)step(dt/n)}
+  render();requestAnimationFrame(loop);
+}
+init();build();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
