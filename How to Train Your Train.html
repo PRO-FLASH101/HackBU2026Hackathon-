@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Subway God</title>
+<title>How to Train Your Train</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
@@ -73,7 +73,12 @@ body:not(.play) #hud,body:not(.play) #bot,body:not(.play) #hint,body:not(.play) 
 .shop{max-height:42vh;overflow:auto;margin:8px 0}.it{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--rule)}
 .stp{display:flex;gap:8px;align-items:center}.stp button{width:30px;height:30px;border-radius:8px;border:2px solid var(--rule);background:transparent;color:var(--ink)}.stp button:disabled{opacity:.35;cursor:default}
 @media(max-width:760px){.wmap{height:420px}.pin{width:104px;font-size:11px}}
-#hud{max-height:calc(100vh - 20px);overflow:auto}.wmap svg{position:absolute;inset:0;width:100%;height:100%}.pin{z-index:2}</style>
+#hud{max-height:calc(100vh - 20px);overflow:auto}.wmap svg{position:absolute;inset:0;width:100%;height:100%}.pin{z-index:2}#hud{width:290px}.nb{grid-template-columns:70px 1fr 112px;font-size:13px}.nb.r2{grid-template-columns:78px 1fr 38px}
+.lb{font-size:15px;padding:2px 8px;border-width:4px;gap:6px}.lb .q{font-size:18px;padding:0 8px;border-radius:8px}.lb .m{font-size:15px;opacity:1;font-weight:700;color:#2e9e57}.lb.mid .m{color:#d98a00}.lb.sad .m{color:#ef5350}
+#emg{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(46px + env(safe-area-inset-bottom,0px));z-index:6;font-size:17px;padding:10px 18px;border-radius:14px;background:#e0302f;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+body:not(.play) #emg{display:none}
+@media(max-width:760px){#hud{width:175px}.nb{grid-template-columns:44px 1fr 76px;font-size:10px}.nb.r2{grid-template-columns:56px 1fr 30px}.lb{font-size:12px}.lb .q{font-size:14px}#emg{font-size:14px;padding:8px 12px}}
+</style>
 </head>
 <body>
 <div id="stage"></div>
@@ -83,8 +88,8 @@ body:not(.play) #hud,body:not(.play) #bot,body:not(.play) #hint,body:not(.play) 
   <div class="small" style="margin-top:6px">Catastrophe meter</div>
   <div class="meter"><i id="chaos"></i></div>
   <div class="row small"><span id="crews"></span><b id="money" style="font-size:16px;color:var(--ink)"></b></div>
-  <div class="btns"><button class="btn sm" id="emg">Emergency fix $200k</button><button class="btn sm gray" id="spd">Speed x1</button><button class="btn sm gray" id="exit">Town map</button></div>
-  <div id="tkl" class="small"></div><div class="small" style="margin-top:6px">Next incident odds</div><div id="risk"></div><div class="small" id="aiu"></div>
+  <div class="btns"><button class="btn sm gray" id="spd">Speed x1</button><button class="btn sm gray" id="exit">Town map</button></div>
+  <div id="tkl" class="small"></div><div class="small" style="margin-top:6px">Next incident odds</div><div id="risk"></div><div class="small" id="aiu"></div><div class="small" id="gro"></div>
   <div class="row" style="margin-top:6px"><b>Fairness</b><b id="fair" style="font-size:20px">100</b></div>
   <div id="nbs"></div>
   <div id="alert"></div>
@@ -97,7 +102,7 @@ body:not(.play) #hud,body:not(.play) #bot,body:not(.play) #hint,body:not(.play) 
   <div class="seg" role="group" aria-label="Dispatcher goal"><button id="m-avg" aria-pressed="true">Fastest average</button><button id="m-fair" aria-pressed="false">Fair to all</button></div>
   <div class="btns"><button class="btn" id="accept">Do it</button><label class="small"><input type="checkbox" id="auto"> Let the bot drive</label></div>
 </div>
-<div id="toast" role="status"></div>
+<button id="emg" class="btn">🚨 EMERGENCY FIX · $350k</button><div id="toast" role="status"></div>
 <div id="hint">Drag to turn the map, scroll to zoom. Tap a train to switch its track. Tap a closed or unhappy station tag, or a broken train, to spend a repair crew (an instant train repair also costs $75k).</div>
 <div id="scr"><div class="card" id="scrc"></div></div>
 <script>
@@ -110,10 +115,10 @@ var TKC=[0x2fb5a9,0x9b6be0,0xe9a23b,0xe06377,0x4a90d9,0x6cc24a],TKS=['#2fb5a9','
 var TIME=600,RN={br:'Breakdown',cr:'Overcrowd',fl:'Flood',ri:'Riot',eq:'Quake',ls:'Landslide',tf:'Tree fall'};function mny(n){return n>=1e6?'$'+(n/1e6).toFixed(2).replace(/0$/,'')+'M':'$'+Math.round(n/1e3)+'k'}
 var star=[['a','Steelgate'],['b','Ironforge'],['c','Anvil Hill'],['d','Rivet Row'],['e','Crestview']].map(function(s,k){var a=(-90+72*k)*Math.PI/180;return [s[0],s[1],Math.round(Math.cos(a)*20),Math.round(Math.sin(a)*20),[2.4,2,2.8,1.8,2.2][k]]});
 var TW=[
-{n:'Fox Hollow',ttl:'Apprentice Conductor Town',size:'2 mi by 1 mi',ic:'🌲',shape:'rect',w:20,h:10,cd:26,st:[['a','Pinewood',-7,0,2],['b','Eastbrook',7,0,2.6]],tk:[['a b',0,-2.2],['a b',0,0],['a b',0,2.2]],base:5000000,tr:2,ev:['br','cr'],gap:[18,26],ground:0x8fcf6a,outer:0x2f7a3f,sky:0xcfe8d5,th:'forest',nw:'The basics: breakdowns, crowds and station morale.'},
-{n:'Acorn Bay',ttl:'Novice Conductor Town',size:'3 mi by 3 mi',ic:'🏖️',shape:'rect',w:24,h:24,cd:34,st:[['a','Driftwood',-8,-6,2],['b','Shellcove',8,-6,2.4],['c','Pier Street',0,8,3]],tk:[['a b',0,0],['b c',0,0],['c a',0,0]],base:5000000,tr:2,ev:['br','cr','fl'],gap:[16,24],ground:0x9fd470,outer:0x49a6e0,sky:0xbfe3f5,th:'bay',nw:'New: floods close stations near the water.'},
-{n:'Merchant Ford',ttl:'Journeyman Conductor Town',size:'circle, 5 mi radius',ic:'🏙️',shape:'circle',r:16,cd:40,st:[['a','Old Bridge',-9,-3,2.2],['b','Market Square',9,-3,3],['c','Guildhall',0,9,2.4]],tk:[['a b',0,0],['b c',0,0],['c a',0,0],['a b',0,2.8],['a b',0,-2.8]],base:5000000,tr:3,ev:['br','cr','cr','cr','ri'],gap:[14,20],ground:0xb7c4a0,outer:0x2f7a3f,sky:0xe3e6ec,th:'urban',nw:'New: heavier crowds and riots at unhappy stations.'},
-{n:'Dragon Hollow',ttl:'Master Conductor Town',size:'circle, 7 mi radius',ic:'🏔️',shape:'circle',r:20,cd:46,st:[['a','Ember Gate',-12,0,2],['b','Scale Market',0,-11,2.6],['c','Wyrm Row',12,0,3],['d','Cinder Quay',0,11,2.2]],tk:[['a b',0,0],['b c',0,0],['c d',0,0],['d a',0,0],['a c',0,0]],base:5000000,tr:3,ev:['br','cr','eq','ls'],gap:[13,19],ground:0xc2b18f,outer:0x6f8f5a,sky:0xd8d4cc,th:'dragon',nw:'New: earthquakes and landslides.'},
+{n:'Fox Hollow',ttl:'Apprentice Conductor Town',size:'2 mi by 1 mi',ic:'🌲',shape:'rect',w:20,h:10,cd:26,st:[['a','Pinewood',-7,0,2],['b','Eastbrook',7,0,2.6]],tk:[['a b',0,-2.2],['a b',0,0],['a b',0,2.2]],base:3000000,tr:2,ev:['br','cr'],gap:[18,26],ground:0x8fcf6a,outer:0x2f7a3f,sky:0xcfe8d5,th:'forest',nw:'The basics: breakdowns, crowds and station morale.'},
+{n:'Acorn Bay',ttl:'Novice Conductor Town',size:'3 mi by 3 mi',ic:'🏖️',shape:'rect',w:24,h:24,cd:34,st:[['a','Driftwood',-8,-6,2],['b','Shellcove',8,-6,2.4],['c','Pier Street',0,8,3]],tk:[['a b',0,0],['b c',0,0],['c a',0,0]],base:3500000,tr:2,ev:['br','cr','fl'],gap:[16,24],ground:0x9fd470,outer:0x49a6e0,sky:0xbfe3f5,th:'bay',nw:'New: floods close stations near the water.'},
+{n:'Merchant Ford',ttl:'Journeyman Conductor Town',size:'circle, 5 mi radius',ic:'🏙️',shape:'circle',r:16,cd:40,st:[['a','Old Bridge',-9,-3,2.2],['b','Market Square',9,-3,3],['c','Guildhall',0,9,2.4]],tk:[['a b',0,0],['b c',0,0],['c a',0,0],['a b',0,2.8],['a b',0,-2.8]],base:4000000,tr:3,ev:['br','cr','cr','cr','ri'],gap:[14,20],ground:0xb7c4a0,outer:0x2f7a3f,sky:0xe3e6ec,th:'urban',nw:'New: heavier crowds and riots at unhappy stations.'},
+{n:'Dragon Hollow',ttl:'Master Conductor Town',size:'circle, 7 mi radius',ic:'🏔️',shape:'circle',r:20,cd:46,st:[['a','Ember Gate',-12,0,2],['b','Scale Market',0,-11,2.6],['c','Wyrm Row',12,0,3],['d','Cinder Quay',0,11,2.2]],tk:[['a b',0,0],['b c',0,0],['c d',0,0],['d a',0,0],['a c',0,0]],base:4500000,tr:3,ev:['br','cr','eq','ls'],gap:[13,19],ground:0xc2b18f,outer:0x6f8f5a,sky:0xd8d4cc,th:'dragon',nw:'New: earthquakes and landslides.'},
 {n:'Ironcrest City',ttl:'Grandmaster Conductor Town',size:'star, 7 mi sides',ic:'⭐',shape:'star',R:26,ri:12,cd:52,st:star,tk:[['a c',0,0],['b d',0,0],['c e',0,0],['d a',0,0],['e b',0,0],['a b',0,0]],base:5000000,tr:4,ev:['br','cr','cr','ri','tf'],gap:[11,16],ground:0x9aa7bd,outer:0x2f7a3f,sky:0x9db0d6,th:'iron',nw:'New: riots, bigger crowds and falling trees that cut power.'}];
 var prog={open:1,stars:[0,0,0,0,0]};
 try{var sv=JSON.parse(localStorage.getItem('sg3d3'));if(sv&&sv.open)prog=sv}catch(e){}
@@ -205,14 +210,39 @@ function build(tw){
   else if(tw.th==='dragon'){for(var k=0;k<7;k++){var mx=-34+k*11+rnd()*4,mz=-32-rnd()*8,h=14+rnd()*8,r=8+rnd()*3;M(new T.ConeGeometry(r,h,6),0x8a8f99,mx,h/2-.5,mz);M(new T.ConeGeometry(r*.42,h*.3,6),0xffffff,mx,h*.85-.5,mz)}
     houses(22,inn,3,true);forest(30,function(x,z){return inn(x,z)&&x<2},gr);forest(40,function(x,z){return out(x,z)&&z>-24},gr)}
   else{forest(150,out,gr);houses(26,inn,4.5)}
+  details(tw);
+}
+function details(tw){
+  var th=tw.th,i,x,z,rm=[],lp=[],stp=th==='forest'||th==='bay'?12:8,lamps=th==='urban'||th==='iron'||th==='dragon';
+  function ok(x,z){return inside(tw,x,z,-1.2)&&far(x,z,2.2)}
+  for(x=-36;x<=36;x+=stp)for(z=-36;z<=36;z+=2)if(ok(x,z)){rm.push([x,z,.8,2.1]);if(lamps&&z%stp===0)lp.push([x+.9,z])}
+  for(z=-36;z<=36;z+=stp)for(x=-36;x<=36;x+=2)if(ok(x,z))rm.push([x,z,2.1,.8]);
+  var im=new T.InstancedMesh(BX(1,.04,1),mat(0x5b626e),Math.max(1,rm.length)),m=new T.Matrix4();
+  rm.forEach(function(r,k){m.compose(new T.Vector3(r[0],.03,r[1]),new T.Quaternion(),new T.Vector3(r[2],1,r[3]));im.setMatrixAt(k,m)});
+  im.count=rm.length;im.receiveShadow=true;im.frustumCulled=false;root.add(im);
+  lp.slice(0,40).forEach(function(p){M(new T.CylinderGeometry(.05,.06,1.4,6),0x39424d,p[0],.7,p[1]);M(new T.SphereGeometry(.16,8,6),0xffe9a8,p[0],1.45,p[1])});
+  function spot(mg,fn){for(var t=0;t<90;t++){var x=-30+rnd()*60,z=-30+rnd()*60;if(inside(tw,x,z,-mg)&&far(x,z,mg+1.5)){fn(x,z);return}}}
+  function lake(){spot(1.6,function(x,z){M(new T.CylinderGeometry(1.5,1.5,.05,20),0x4aa3df,x,.03,z)})}
+  if(th==='forest'){lake();lake();spot(1,function(x,z){for(var k=0;k<4;k++)M(new T.CylinderGeometry(.1,.1,.8,5),0x7a5230,x+Math.cos(k*1.57)*.4,.1,z+Math.sin(k*1.57)*.4).rotation.z=1.2;M(new T.ConeGeometry(.25,.6,6),0xff7a1f,x,.35,z)})}
+  if(th==='bay'){var zs=tw.h/2+2.2;M(BX(1.6,.2,9),0x9a6b3d,0,.05,tw.h/2+8);
+    [-12,-8,-4,4,8,12].forEach(function(x,k){M(new T.CylinderGeometry(.04,.04,1.1,5),0xffffff,x,.55,zs);M(new T.ConeGeometry(.7,.35,8),[0xe53935,0xffffff,0x29b6f6][k%3],x,1.2,zs)});
+    [[-30,10],[32,-8],[-27,-24],[28,22]].forEach(function(b){M(BX(2.2,.4,.9),0xffffff,b[0],.05,b[1]);M(new T.ConeGeometry(.6,1.6,3),0xf5f5f5,b[0],1,b[1])});
+    M(new T.CylinderGeometry(.5,.8,4,10),0xffffff,-13,2,14);M(new T.CylinderGeometry(.62,.68,.7,10),0xe53935,-13,2.2,14);M(new T.SphereGeometry(.5,8,6),0xffe9a8,-13,4.4,14);M(new T.ConeGeometry(.7,.6,10),0xe53935,-13,5.1,14)}
+  if(th==='urban'){for(i=0;i<8;i++)spot(2,function(x,z){var h=6+rnd()*5;M(BX(2,h,2),[0x9fb3c8,0xb8c4d0,0x8aa0b8][i%3],x,h/2,z);M(new T.CylinderGeometry(.04,.04,1.4,4),0x555d66,x,h+.7,z)});
+    spot(3,function(x,z){M(BX(5,.06,5),0x7cc06a,x,.04,z);for(var k=0;k<4;k++)M(new T.ConeGeometry(.6,1.4,6),0x2f7f3f,x-1.6+k*1.1,.8,z+(k%2?1:-1))});
+    spot(2,function(x,z){M(new T.CylinderGeometry(1.1,1.2,.35,16),0xcfd6de,x,.18,z);M(new T.CylinderGeometry(1,1,.1,16),0x4aa3df,x,.38,z);M(new T.ConeGeometry(.25,1.1,8),0xdde6ee,x,.9,z)})}
+  if(th==='dragon'){lake();M(new T.ConeGeometry(7,11,10),0x6b4f43,30,5,-27);M(new T.ConeGeometry(1.8,2,10),0xff5a1f,30,10.2,-27);
+    spot(2,function(x,z){M(BX(3,.4,1.6),0x9aa0a8,x,.2,z);M(BX(2.2,.9,.9),0xb03a2e,x,.85,z);M(BX(.7,.7,.6),0xb03a2e,x+1.4,1.5,z);M(new T.ConeGeometry(.9,1.8,3),0xd35400,x-.2,1.9,z+.8)})}
+  if(th==='iron'){for(i=0;i<5;i++)spot(2.5,function(x,z){M(BX(3,1.6,2),0x7d8590,x,.8,z);M(new T.CylinderGeometry(.3,.4,3.4,8),0x8a5a44,x+1,1.7,z);M(new T.SphereGeometry(.5,8,6),tm(0xb0b5bb,.55),x+1,3.9,z);M(new T.SphereGeometry(.35,8,6),tm(0xb0b5bb,.45),x+1.3,4.6,z)});
+    spot(2,function(x,z){M(BX(1.4,5,1.4),0xb59d7a,x,2.5,z);M(new T.ConeGeometry(1.2,1.4,4),0x7a4a3a,x,5.7,z).rotation.y=Math.PI/4;M(new T.CylinderGeometry(.5,.5,.08,16),0xffffff,x,4.2,z+.72).rotation.x=Math.PI/2})}
 }
 function mkTrain(id,ti){
   var tr={id:id,tk:ti,p:0,dir:1,down:0,last:-1,vis:-1,mats:[],smoke:[]},tg=new T.Group();root.add(tg);
-  for(var c=0;c<3;c++){var bm=new T.MeshLambertMaterial({color:TKC[ti]});tr.mats.push(bm);M(BX(1.7,.8,.9),bm,-c*1.85,.4,0,tg);M(BX(1.7,.1,.95),0x31404f,-c*1.85,.85,0,tg);M(BX(1.2,.25,.93),0xcdeefa,-c*1.85,.5,0,tg)}
-  M(BX(.1,.18,.5),0xfff3a0,.86,.35,0,tg);
+  for(var c=0;c<3;c++){var bm=new T.MeshLambertMaterial({color:TKC[ti]});tr.mats.push(bm);M(BX(1.7,.8,.9),bm,(1-c)*1.85,.4,0,tg);M(BX(1.7,.1,.95),0x31404f,(1-c)*1.85,.85,0,tg);M(BX(1.2,.25,.93),0xcdeefa,(1-c)*1.85,.5,0,tg)}
+  M(BX(.1,.18,.5),0xfff3a0,2.75,.35,0,tg);M(BX(.1,.18,.5),0xfff3a0,-2.75,.35,0,tg);
   var cv=document.createElement('canvas');cv.width=cv.height=64;var cc=cv.getContext('2d');cc.fillStyle='#fff';cc.beginPath();cc.arc(32,32,28,0,7);cc.fill();cc.fillStyle='#1d2a3a';cc.font='bold 40px sans-serif';cc.textAlign='center';cc.fillText(id,32,46);
   var sp=new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(cv)}));sp.scale.set(.9,.9,1);sp.position.set(0,1.5,0);tg.add(sp);
-  var hit=new T.Mesh(BX(5.6,1.8,2),new T.MeshBasicMaterial({visible:false}));hit.position.set(-1.8,.7,0);hit.userData.tr=tr;tg.add(hit);tr.hit=hit;
+  var hit=new T.Mesh(BX(5.6,1.8,2),new T.MeshBasicMaterial({visible:false}));hit.position.set(0,.7,0);hit.userData.tr=tr;tg.add(hit);tr.hit=hit;
   tr.bc=M(new T.SphereGeometry(.2,8,6),0xff3b30,0,1.1,0,tg);tr.bc.visible=false;
   for(var k=0;k<3;k++){var sm=new T.Mesh(new T.SphereGeometry(.28,8,6),tm(0x9aa0a6,.6));sm.visible=false;tg.add(sm);tr.smoke.push(sm)}
   tr.g=tg;tr.p=rnd()*(TK[ti].pts.length-1);return tr;
@@ -251,7 +281,7 @@ function init(i,bought){
   G={i:i,tw:tw,t:0,over:false,crews:crews,maxc:crews,crewT:0,money:tw.base-cost,next:8,trains:TR,hist:{},fs:0,fn:0,chaos:0,peak:0,sug:null,sugT:0,quake:0,pend:null,say:'',sayT:0,first:true,up:up,speed:1,xtr:bought.train||0,rep:(60+10*i)/(1+(bought.crew||0)),ai:0,cs:0,ms:0};
   for(var id in S)G.hist[id]=[];
   var h='';for(var id2 in S)h+='<div class="nb"><span>'+S[id2].name+'</span><div class="bar"><i id="b-'+id2+'" style="background:'+SC[S[id2].col]+'"></i></div><b id="v-'+id2+'">0s</b></div>';
-  $('#nbs').innerHTML=h;var ru={};G.tw.ev.forEach(function(e){ru[e]=1});$('#risk').innerHTML=Object.keys(ru).map(function(e){return '<div class="nb"><span>'+RN[e]+'</span><div class="bar"><i id="rk-'+e+'" style="background:#ef8a3d"></i></div><b id="rv-'+e+'"></b></div>'}).join('');
+  $('#nbs').innerHTML=h;var ru={};G.tw.ev.forEach(function(e){ru[e]=1});$('#risk').innerHTML=Object.keys(ru).map(function(e){return '<div class="nb r2"><span>'+RN[e]+'</span><div class="bar"><i id="rk-'+e+'" style="background:#ef8a3d"></i></div><b id="rv-'+e+'"></b></div>'}).join('');
   $('#tkl').innerHTML=TK.map(function(k,i){return '<span id="tk'+i+'"><i style="background:'+TKS[i]+'"></i>'+(i+1)+'</span>'}).join('');
   $('#town').textContent=tw.n;$('#ttl').textContent=tw.ttl;$('#scr').style.display='none';document.body.classList.add('play');
   ang=0;cd=tw.cd;dist=cd;$('#spd').textContent='Speed x1';
@@ -278,16 +308,16 @@ function redirect(s){
 }
 function step(dt){
   G.t+=dt;var up=G.up;
-  for(var id in S){var s=S[id];s.acc+=s.rate*dt*(.7+Math.random()*.6);while(s.acc>=1){s.acc--;redirect(s).q.push(G.t)}if(s.closed>0)s.closed-=dt;
+  for(var id in S){var s=S[id];s.acc+=s.rate*dt*(.7+Math.random()*.6)*(1+.6*G.t/TIME);while(s.acc>=1){s.acc--;redirect(s).q.push(G.t)}if(s.closed>0)s.closed-=dt;
     s.m=Math.max(0,Math.min(100,s.m+dt*(.6+s.staff*.3-(s.q.length>20?(s.q.length-20)*.05:0)-(s.closed>0?1.2:0))))}
   TK.forEach(function(k){if(k.out>0)k.out-=dt});
   if(G.quake>0){G.quake-=dt;if(G.quake<=0&&G.pend){G.pend();G.pend=null}}
   G.trains.forEach(function(t){
     if(t.down>0){t.down-=dt;return}
-    var k=TK[t.tk];if(G.quake>0||k.out>0)return;
+    var k=TK[t.tk];if(G.quake>0||k.out>0)return;if(t.wait>0){t.wait-=dt;return}
     var pts=k.pts,len=pts.length-1,j=Math.max(0,Math.min(Math.floor(t.p),len-1)),a=pts[j],b=pts[j+1],d=Math.hypot(b.x-a.x,b.z-a.z)||1;
     var blk=false,gp=6.8/d;G.trains.forEach(function(u){if(u===t||u.tk!==t.tk||u.dir!==t.dir)return;var q=(u.p-t.p)*t.dir;if((q>0&&q<gp)||(q===0&&u.id<t.id))blk=true});if(blk)return;t.p+=t.dir*2.4*dt/d;
-    if(t.p>=len){t.p=len;t.dir=-1}if(t.p<=0){t.p=0;t.dir=1}
+    if(t.p>=len){t.p=len;t.dir=-1;t.wait=3.5}if(t.p<=0){t.p=0;t.dir=1;t.wait=3.5}
     var r=Math.round(t.p);if(r!==t.last&&Math.abs(t.p-r)<.1){t.last=r;board(t,k.ids[r])}
   });
   G.next-=dt;if(G.next<=0){spawn();G.next=1.6*(G.tw.gap[0]+Math.random()*(G.tw.gap[1]-G.tw.gap[0]))}
@@ -299,13 +329,14 @@ function risks(){var cnt={},n=0,ex=0,sum=0,w={};G.tw.ev.forEach(function(e){cnt[
   for(var e in cnt){w[e]=cnt[e]*(e==='cr'?Math.pow(.92,G.xtr)*Math.pow(.88,ex):1);sum+=w[e]}for(e in w)w[e]/=sum;return w}
 function pick(){var w=risks(),r=Math.random(),a=0,l;for(var e in w){l=e;a+=w[e];if(r<=a)return e}return l}
 function emergency(){
-  if(!G||G.over)return;if(G.money<200000){toast('Not enough money');return}
-  var d=false,id,i;
+  if(!G||G.over)return;if(G.money<350000){toast('Not enough money ($350k needed)');return}
+  var d=false,id;
   for(id in S)if(!d&&S[id].closed>0){S[id].closed=0;d=true}
   G.trains.forEach(function(t){if(!d&&t.down>0){t.down=0;d=true}});
   TK.forEach(function(k){if(!d&&k.out>0){k.out=0;d=true}});
-  if(!d){if(G.chaos>5){G.chaos=Math.max(0,G.chaos-20)}else{toast('Nothing needs fixing');return}}
-  G.money-=200000;toast('Emergency fix! Problem solved.');
+  if(!d)G.chaos=Math.max(0,G.chaos-20);
+  G.money-=350000;var m=$('#money');m.textContent=mny(G.money);m.style.color='#d93636';setTimeout(function(){m.style.color=''},1400);
+  toast(d?'Emergency fix! -$350k':'Emergency measures: disaster meter -20. -$350k');
 }
 function closeSt(s,sec,kind){if(s.closed<=0){s.closed=sec;s.kind=kind}}
 function spawn(){
@@ -419,7 +450,7 @@ function mapSvg(){
 function world(){
   document.body.classList.remove('play');G=null;if(root){scene.remove(root);root=null}
   [].forEach.call(document.querySelectorAll('.lb'),function(n){n.remove()});scene.background=new T.Color(0xcfe8d5);
-  var pos=[[16,62],[36,28],[55,66],[76,28],[88,64]],h='<h1>Subway God</h1><p class="small">Pick a town. Each one is its own puzzle, and the next stays hidden until you beat it.</p><div class="wmap">'+mapSvg();
+  var pos=[[16,62],[36,28],[55,66],[76,28],[88,64]],h='<h1>How to Train Your Train</h1><p class="small">Pick a town. Each one is its own puzzle, and the next stays hidden until you beat it.</p><div class="wmap">'+mapSvg();
   TW.forEach(function(t,i){var ok=i<prog.open;h+='<button class="pin" data-i="'+i+'" style="left:'+pos[i][0]+'%;top:'+pos[i][1]+'%"'+(ok?'':' disabled')+'><span class="ic">'+(ok?t.ic:'🔒')+'</span><b>'+(ok?t.n:'???')+'</b><span class="small">'+(ok?t.ttl:'Locked')+'</span><span>'+(ok?'★'.repeat(prog.stars[i])+'☆'.repeat(5-prog.stars[i]):'')+'</span></button>'});
   $('#scrc').innerHTML=h+'</div>';$('#scr').style.display='flex';
   [].forEach.call(document.querySelectorAll('.pin'),function(b){b.onclick=function(){brief(+b.dataset.i)}});
@@ -430,7 +461,7 @@ function brief(i){
     var spent=0;its.forEach(function(it){spent+=(bought[it.k]||0)*it.c});
     var h='<h2 style="font-size:24px;margin:0">'+tw.n+'</h2><p class="small" style="margin:2px 0 8px">'+tw.ttl+'. '+tw.size+', '+tw.st.length+' stations, '+tw.tk.length+' tracks. '+tw.nw+'</p><div class="row"><b>Build budget</b><b id="bm">'+mny(tw.base-spent)+'</b></div><div class="shop">';
     its.forEach(function(it,j){var n=bought[it.k]||0;h+='<div class="it"><div><b>'+it.n+'</b> <span class="small">'+mny(it.c)+'</span><br><span class="small">'+it.d+'</span></div><div class="stp"><button data-j="'+j+'" data-d="-1"'+(n?'':' disabled')+'>-</button><b>'+n+'</b><button data-j="'+j+'" data-d="1"'+(n>=it.max||tw.base-spent<it.c?' disabled':'')+'>+</button></div></div>'});
-    h+='</div><p class="small">Unspent money pays for $200k emergency fixes and $75k instant train repairs during the round. Every station starts with 1 free staff crew and 1 repair crew.</p><div class="btns"><button class="btn" id="go">Start the shift</button><button class="btn gray" id="bk">Town map</button></div>';
+    h+='</div><p class="small">Unspent money pays for $350k emergency fixes and $75k instant train repairs during the round. Every station starts with 1 free staff crew and 1 repair crew.</p><div class="btns"><button class="btn" id="go">Start the shift</button><button class="btn gray" id="bk">Town map</button></div>';
     $('#scrc').innerHTML=h;
     [].forEach.call(document.querySelectorAll('.stp button'),function(b){b.onclick=function(){var it=its[+b.dataset.j];bought[it.k]=(bought[it.k]||0)+ +b.dataset.d;render()}});
     $('#go').onclick=function(){init(i,bought)};$('#bk').onclick=world;
@@ -477,8 +508,8 @@ function frame(now){
       o.bar.visible=s.closed>0&&s.kind!=='fl';o.cr.visible=s.closed>0&&s.kind==='eq';o.fire.visible=riot;
       if(riot)o.fire.children.forEach(function(f,k){f.scale.y=.8+Math.abs(Math.sin(time*9+k*2))*.7});
       o.al.visible=s.q.length>40&&s.closed<=0;if(o.al.visible){var k2=1+Math.sin(time*8)*.15;o.al.scale.set(k2,k2,k2)}
-      var d=lab[id2],ch=d.children;ch[1].textContent=s.closed>0?'Closed '+Math.ceil(s.closed)+'s':s.q.length;ch[2].textContent='♥'+Math.round(s.m);
-      d.classList.toggle('closed',s.closed>0);d.classList.toggle('hot',s.q.length>40&&s.closed<=0);d.classList.toggle('sad',s.m<35);
+      var d=lab[id2],ch=d.children;ch[1].textContent=s.closed>0?'Closed '+Math.ceil(s.closed)+'s':'👥 '+s.q.length;ch[2].textContent='♥'+Math.round(s.m);
+      d.classList.toggle('closed',s.closed>0);d.classList.toggle('hot',s.q.length>40&&s.closed<=0);d.classList.toggle('sad',s.m<35);d.classList.toggle('mid',s.m>=35&&s.m<60);
       vp.set(s.x,2.6,s.z).project(cam);d.style.transform='translate('+((vp.x*.5+.5)*innerWidth)+'px,'+((-vp.y*.5+.5)*innerHeight)+'px) translate(-50%,-100%)';
     }
     TK.forEach(function(k,i){
@@ -490,7 +521,7 @@ function frame(now){
     G.trains.forEach(function(t){
       var pts=TK[t.tk].pts,j=Math.max(0,Math.min(Math.floor(t.p),pts.length-2)),f=t.p-j,a=pts[j],b=pts[j+1];
       var dd=Math.hypot(b.x-a.x,b.z-a.z)||1,tl=t.dir>0?.5:-.5;if(t.lane==null)t.lane=tl;t.lane+=(tl-t.lane)*Math.min(1,dt*3);t.g.position.set(a.x+(b.x-a.x)*f-(b.z-a.z)/dd*t.lane,.2,a.z+(b.z-a.z)*f+(b.x-a.x)/dd*t.lane);
-      t.g.rotation.y=-Math.atan2((b.z-a.z)*t.dir,(b.x-a.x)*t.dir);
+      t.g.rotation.y=-Math.atan2(b.z-a.z,b.x-a.x);
       var bad=t.down>0||TK[t.tk].out>0?1:0;
       if(t.vis!==bad){t.vis=bad;t.mats.forEach(function(m){m.color.setHex(bad?0x777d85:TKC[t.tk])})}
       var brk=t.down>0;t.bc.visible=brk&&Math.floor(time*4)%2===0;
@@ -499,10 +530,10 @@ function frame(now){
     $('#clock').textContent=fmt(TIME-G.t);
     $('#chaos').style.width=G.chaos+'%';
     $('#crews').textContent='Crews '+'●'.repeat(Math.min(G.crews,8))+'○'.repeat(Math.max(0,G.maxc-G.crews));
-    $('#money').textContent=mny(G.money);$('#emg').disabled=G.money<200000;
-    $('#fair').textContent=Math.round(w2.fair);var rw=risks();for(var e9 in rw){$('#rk-'+e9).style.width=rw[e9]*100+'%';$('#rv-'+e9).textContent=Math.round(rw[e9]*100)+'%'}$('#aiu').textContent='Bot actions: '+G.ai+' / 10 (5th star)';
+    $('#money').textContent=mny(G.money);$('#emg').disabled=G.money<350000;
+    $('#fair').textContent=Math.round(w2.fair);var rw=risks();for(var e9 in rw){$('#rk-'+e9).style.width=rw[e9]*100+'%';$('#rv-'+e9).textContent=Math.round(rw[e9]*100)+'%'}$('#gro').textContent='Ridership +'+Math.round(60*G.t/TIME)+'% and rising';$('#aiu').textContent='Bot actions: '+G.ai+' / 10 (5th star)';
     var worst=null,wv=0;
-    for(var id3 in S){var v=w2.by[id3];if(v>wv){wv=v;worst=id3}$('#b-'+id3).style.width=Math.min(100,v/60*100)+'%';$('#v-'+id3).textContent=Math.round(v)+'s'}
+    for(var id3 in S){var v=w2.by[id3];if(v>wv){wv=v;worst=id3}$('#b-'+id3).style.width=Math.min(100,v/60*100)+'%';$('#v-'+id3).textContent='👥'+S[id3].q.length+' ♥'+Math.round(S[id3].m)+' '+Math.round(v)+'s'}
     $('#alert').textContent=(worst&&w2.avg>1&&wv>w2.avg*1.8&&wv>20)?S[worst].name+' waits '+(wv/w2.avg).toFixed(1)+'x longer than average.':'';
     $('#bot').className='card'+(G.chaos>80?' panic':G.chaos>55?' worry':'');
     $('#say').textContent=G.sayT>0?G.say:(G.sug?G.sug.text:'All good. Holding steady.');
