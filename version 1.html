@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>Metro Crisis</title>
+    <title>METRO CRISIS — NYC Flood Emergency</title>
     <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Barlow+Semi+Condensed:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -1900,11 +1900,12 @@
     }
 
     .cityart {
-        height: 120px;
-        margin: -10px -10px 12px;
+        height: 260px;
+        margin: 0 0 16px;
         background: #d9e5ef;
         overflow: hidden;
-        border-radius:10px 10px 2px 2px
+        border-radius: 12px 12px 0 0;
+        border-bottom:1px solid #e4ebf3
     }
 
     .cityart svg {
@@ -1929,11 +1930,16 @@
     }
 
     .mapIntro {
-        margin-bottom:9px
+        margin-bottom: 12px;
+        max-width:1120px
     }
 
     .mapIntro h1 {
         font-size:31px
+    }
+
+    .mapIntro .lead {
+        max-width:1080px
     }
 
     .mapFooter {
@@ -2085,7 +2091,7 @@
         }
 
         .cityart {
-            height:100px
+            height:180px
         }
 
         .modalCard {
@@ -2316,41 +2322,66 @@
     }
 
     .mapDifficulty {
-        display: flex;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
         align-items: center;
         gap: 12px;
-        flex-wrap: wrap;
-        margin: 14px 0 8px;
-        padding: 12px 16px;
-        border-radius: 12px;
-        background: rgba(245, 248, 252, .94)
+        margin: 18px auto 10px;
+        padding: 14px 18px;
+        border-radius: 14px;
+        background: #f5f8fc;
+        border: 1px solid #d9e3ee;
+        box-shadow: 0 8px 24px rgba(15, 31, 49, .06);
+        width: min(100%, 1120px)
     }
 
     .mapDifficulty label {
-        font-weight: 750;
-        font-size: 14px
+        font-weight: 800;
+        font-size: 14px;
+        color: #172b41;
+        white-space: nowrap
     }
 
     .mapDifficulty select {
-        flex: 1;
-        min-width: 200px;
+        width: 100%;
+        min-width: 0;
         border: 1px solid #cad6e2;
-        border-radius: 8px;
-        padding: 10px 12px;
+        border-radius: 10px;
+        padding: 11px 14px;
         color: #172b41;
         background: #fff;
-        font-weight: 650
+        font-weight: 700;
+        font-size: 14px
     }
 
     .mapChoice {
-        min-width:0
+        min-width: 0;
+        width:min(100%, 820px)
     }
 
     .mapChoice .mc {
         cursor: pointer !important;
         width: 100%;
-        height: calc(100% - 54px);
-        display:block
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        overflow:hidden
+    }
+
+    .mapChoice .mc b {
+        margin: 0 20px 5px;
+        font-size:18px
+    }
+
+    .mapChoice .mc em {
+        margin: 0 20px 6px;
+        font-size:15px
+    }
+
+    .mapChoice .mc .stars {
+        margin: 4px 20px 2px;
+        font-size:18px
     }
 
     .mapChoice .preMission {
@@ -2380,6 +2411,203 @@
 
         #missionReveal {
             transition: none
+        }
+    }
+
+    .mapFoot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px
+    }
+
+    @media (max-width: 760px) {
+        .mapDifficulty {
+            grid-template-columns: 1fr;
+            align-items:stretch
+        }
+
+        .mapDifficulty label {
+            font-size: 13px
+        }
+    }/* Compact mission setup redesign */
+    #scr .card:has(.nycSetup) {
+        width: min(720px, calc(100vw - 32px));
+        max-width: 720px;
+        padding: 24px 28px 22px;
+        border-radius: 18px;
+        box-sizing: border-box
+    }
+
+    .nycSetup {
+        color: var(--ink);
+        width: 100%;
+        box-sizing: border-box
+    }
+
+    .nycSetup .setupHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 20px
+    }
+
+    .nycSetup .setupEyebrow {
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+        color: var(--mute)
+    }
+
+    .nycSetup .setupBack {
+        padding: 8px 13px;
+        white-space: nowrap;
+        box-shadow: none;
+        font-size: 13px
+    }
+
+    .nycSetup .setupHero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 245px;
+        align-items: start;
+        gap: 22px;
+        margin-bottom: 21px
+    }
+
+    .nycSetup h1 {
+        font: 850 clamp(25px, 3vw, 36px) /1.09 system-ui, sans-serif;
+        letter-spacing: -.04em;
+        margin: 6px 0 11px;
+        color: var(--ink)
+    }
+
+    .nycSetup .setupDesc {
+        font: 400 14px/1.58 system-ui, sans-serif;
+        color: var(--mute);
+        margin: 0 0 14px;
+        max-width: 35ch
+    }
+
+    .nycSetup .setupFacts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px
+    }
+
+    .nycSetup .setupFacts span {
+        font: 750 11px/1.2 system-ui, sans-serif;
+        color: #27415a;
+        background: #eaf0f6;
+        padding: 7px 9px;
+        border-radius: 7px
+    }
+
+    .nycSetup .setupArt {
+        margin: 0;
+        overflow: hidden;
+        border: 1px solid #cbd8e5;
+        border-radius: 13px;
+        background: #d7e5ef;
+        height: 190px;
+        width: 245px;
+        box-shadow: 0 7px 20px #142b4015
+    }
+
+    .nycSetup .setupArt svg {
+        display: block;
+        width: 100%;
+        height: 100%
+    }
+
+    .nycSetup .setupArt figcaption {
+        display: none
+    }
+
+    .nycSetup .setupModes {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        padding: 0;
+        margin: 0 0 20px;
+        background: transparent;
+        box-shadow: none;
+        border: none
+    }
+
+    .nycSetup .setupModes label {
+        font: 800 13px/1.3 system-ui, sans-serif;
+        color: var(--ink)
+    }
+
+    .nycSetup .setupModes select {
+        width: 100%;
+        border: 1px solid #becddd;
+        border-radius: 10px;
+        padding: 12px 13px;
+        background: #fff;
+        color: #19324d;
+        font: 650 14px system-ui, sans-serif
+    }
+
+    .nycSetup .setupBottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding-top: 17px;
+        border-top: 1px solid #dce5ef
+    }
+
+    .nycSetup .setupBottom p {
+        font: 500 12px/1.45 system-ui, sans-serif;
+        color: var(--mute);
+        max-width: 32ch;
+        margin: 0
+    }
+
+    .nycSetup .setupGo {
+        border-radius: 10px;
+        box-shadow: none;
+        padding: 12px 25px;
+        white-space: nowrap;
+        min-width: 170px;
+        font: 800 16px system-ui, sans-serif;
+        color: #132338
+    }
+
+    @media (max-width: 620px) {
+        #scr .card:has(.nycSetup) {
+            padding:17px 18px
+        }
+
+        .nycSetup .setupHero {
+            grid-template-columns: 1fr;
+            gap:12px
+        }
+
+        .nycSetup .setupArt {
+            width: 100%;
+            height: 154px;
+            grid-row:1
+        }
+
+        .nycSetup .setupDesc {
+            max-width:none
+        }
+
+        .nycSetup .setupBottom {
+            flex-direction: column;
+            align-items:stretch
+        }
+
+        .nycSetup .setupGo {
+            width:100%
+        }
+
+        .nycSetup h1 {
+            font-size: 28px
         }
     }
     </style>
@@ -2443,8 +2671,6 @@
                 <button class="hudtab" data-tab="resources" aria-pressed="false">🧰 Shop</button>
             </div>
             <div class="hudpane active" data-pane="status">
-                <div class="sec">Network health</div>
-                <div id="umet"></div>
                 <div class="sec" id="cmh">City disaster meters</div>
                 <div id="cmet"></div>
                 <div id="cbtn" class="btns"></div>
@@ -2534,7 +2760,7 @@
                 <input type="checkbox" id="astop" checked>
                  Allow AI to auto-stop trains on a quake alert
             </label>
-            <div id="binfo" hidden>MetroMind runs a forecasting model for this city’s hazard and for the two standard issues, turns forecasts into one recommendation at a time, and explains why with a confidence level. It never acts without your approval. Accepting a recommendation that needs equipment you don’t have in reserve buys it from the emergency fund. It can be wrong: sensors fail, models miss things, and it can optimise the wrong goal. Your report scores whether you trusted it at the right moments.</div>
+            <div id="binfo" hidden>MetroMind uses programmed forecasts for NYC flooding and for the two standard issues, turns forecasts into one recommendation at a time, and explains why with a confidence level. It never acts without your approval. Accepting a recommendation that needs equipment you don’t have in reserve buys it from the emergency fund. It can be wrong: sensors fail, models miss things, and it can optimise the wrong goal. Your report scores whether you trusted it at the right moments.</div>
         </div>
     </div>
     <div id="sp" class="card" hidden></div>
@@ -2771,85 +2997,6 @@
         // ---------- the five systems (real stations, real line colours, approximate real geography)
         var CD = [
         {
-            id: 'tokyo',
-            city: 'Tokyo',
-            sys: 'Tokyo Transit',
-            mission: 'Typhoon Shutdown',
-            flag: '🇯🇵',
-            icon: '🌀',
-            the: true,
-            ent: 'tokyo',
-            stripe: '#9acd32',
-            story: 'A typhoon is approaching. Help passengers get home safely and protect exposed train lines.',
-            basis: 'After the 2018–2019 typhoon seasons, Japanese rail operators began announcing “planned suspensions” hours before big storms. Announce too early and the public loses trust; too late and commuters are stranded on platforms.',
-            challenges: ['Decide when to suspend service', 'Manage passengers rushing home', 'Protect exposed elevated rail sections', 'Avoid stranding commuters'],
-            ai: 'Forecasts demand surges and wind on exposed track from a storm-track model, and recommends when to suspend or restore each line.',
-            how: ['Press <b>Announce suspension</b> so riders head home early. Suspending without notice strands people on platforms.', 'Wind gusts above 90 km/h on the hazard-striped viaducts can hit trains with debris and damage nearby stations. Suspend exposed lines in the Lines panel first.', 'Storm Protection Barriers cut storm damage risk by 25% at the station where you install them and on its viaduct.', 'The Marunouchi Line runs in tunnels, so wind can’t touch it. Restore lines only once the storm has truly passed.'],
-            item: {
-                k: 'barrier',
-                n: 'Storm Protection Barriers',
-                ic: '🛡️',
-                c: 200000,
-                d: 'Install at a station: −25% storm damage risk there and on its exposed viaduct.',
-                move: false,
-                max: 1
-            },
-            liv: 'tokyo',
-            blk: [6.4, 6.4],
-            tree: 'round',
-            sky: 0x9fb0bf,
-            ground: 0x8d9298,
-            grid: .3,
-            gsp: 64,
-            st: [['tokyo', 'Tokyo', 35.6812, 139.7671, 3.2, 'tokyoStn'], ['ueno', 'Ueno', 35.7138, 139.7773, 2.3, 'ueno'], ['ikeb', 'Ikebukuro', 35.7295, 139.7109, 2.8, 'sunshine'], ['shinj', 'Shinjuku', 35.6896, 139.7006, 3.6, 'tocho'], ['shib', 'Shibuya', 35.6580, 139.7016, 3.0, 'scramble'], ['shina', 'Shinagawa', 35.6285, 139.7387, 2.5, 'glass']],
-            ln: [{
-                n: 'Yamanote Line',
-                sh: 'Yamanote',
-                c: 0x9acd32,
-                stops: ['tokyo', 'ueno', 'ikeb', 'shinj', 'shib', 'shina'],
-                loop: true,
-                o: [0, 0],
-                exp: [1, .45, .45, .45, .45, 1],
-                tr: 4
-            },
-            {
-                n: 'Chuo Line',
-                sh: 'Chuo',
-                c: 0xf15a22,
-                stops: ['tokyo', 'shinj'],
-                o: [0, 2.6],
-                exp: [.9],
-                tr: 2
-            },
-            {
-                n: 'Marunouchi Line',
-                sh: 'Marunouchi',
-                c: 0xf62e36,
-                stops: ['ikeb', 'tokyo', 'shinj'],
-                o: [2.6, 0],
-                exp: [0, 0],
-                ug: true,
-                tr: 2
-            }],
-            lm: [['tokyoTower', 35.6586, 139.7454]],
-            water: [[[35.664, 139.778], [35.645, 139.757], [35.62, 139.748], [35.59, 139.752], [35.58, 139.80], [35.60, 139.86], [35.66, 139.86], [35.67, 139.80]]],
-            rivers: [[[[35.75, 139.80], [35.73, 139.802], [35.71, 139.797], [35.69, 139.792], [35.675, 139.785], [35.664, 139.778]], 2.4]],
-            build: {
-                n: 470,
-                h: [2, 8],
-                pal: [0xd8d8d0, 0xc0c6cc, 0xe8e2d6, 0xa8b4bf, 0xb9c2c9, 0xefe9de, 0x9aa7b3],
-                hot: {
-                    shinj: 1.6,
-                    shina: .8,
-                    shib: .9,
-                    tokyo: .9,
-                    ikeb: .6
-                }
-            },
-            trees: [60, 0x3f7f3f],
-            depot: 0
-        },
-        {
             id: 'nyc',
             city: 'New York City',
             sys: 'New York City MTA',
@@ -2934,267 +3081,8 @@
             },
             trees: [40, 0x3f7f3f],
             depot: 0
-        },
-        {
-            id: 'london',
-            city: 'London',
-            sys: 'London Underground',
-            mission: 'Breaking Point',
-            flag: '🇬🇧',
-            icon: '🌡️',
-            the: true,
-            ent: 'london',
-            ug: true,
-            stripe: '#dc241f',
-            story: 'Extreme summer temperatures strain the Underground’s cooling while energy demand climbs and crowded platforms expose commuters to dangerous heat.',
-            basis: 'The UK passed 40 °C for the first time in July 2022. Deep-tube lines like the Central line were dug through clay that has soaked up a century of heat from braking trains and passengers, so platforms can run well above 30 °C in a heatwave.',
-            challenges: ['Allocate limited cooling resources', 'Manage overcrowded stations', 'Adjust train frequencies', 'Prevent dangerous heat buildup underground'],
-            ai: 'Predicts temperature spikes per platform, flags stations at risk of overheating, and recommends where cooling and trains do the most good per megawatt.',
-            how: ['Tap a station to deploy Emergency Cooling & Ventilation Units (−3 °C each), or close it so it can cool down.', 'Every train adds braking heat and draws power. Use − and + in the Lines panel to run fewer or more trains.', 'Stay under the National Grid power cap. Going over cuts ventilation and slows every train.', 'Platforms above 32 °C start causing heat collapses; above 35 °C is critical.'],
-            item: {
-                k: 'cool',
-                n: 'Emergency Cooling & Ventilation Units',
-                ic: '❄️',
-                c: 180000,
-                d: 'Deploy at a station: −3 °C on its platforms and better ventilation. Draws 1 MW; can be moved.',
-                move: true,
-                max: 2
-            },
-            liv: 'tube',
-            blk: [7.2, 7.2],
-            jit: .35,
-            tree: 'round',
-            sky: 0xf3dcae,
-            ground: 0x9c9a90,
-            grid: .15,
-            gsp: 60,
-            st: [['oxf', 'Oxford Circus', 51.5152, -0.1415, 3.4, 'circus', 27], ['tcr', 'Tottenham Court Road', 51.5165, -0.1310, 2.8, 'centrePoint', 26.5], ['hol', 'Holborn', 51.5174, -0.1200, 2.2, null, 27], ['bank', 'Bank', 51.5133, -0.0886, 3.0, 'boe', 28], ['lst', 'Liverpool Street', 51.5178, -0.0823, 3.0, 'lstShed', 25.5], ['kx', 'King’s Cross St Pancras', 51.5308, -0.1238, 3.4, 'kingsCross', 24.5], ['wat', 'Waterloo', 51.5031, -0.1132, 3.2, 'waterloo', 25]],
-            ln: [{
-                n: 'Central line',
-                sh: 'Central',
-                c: 0xdc241f,
-                stops: ['oxf', 'tcr', 'hol', 'bank', 'lst'],
-                o: [0, 0],
-                tr: 3
-            },
-            {
-                n: 'Victoria line',
-                sh: 'Victoria',
-                c: 0x0098d4,
-                stops: ['oxf', 'kx'],
-                o: [-2.6, 0],
-                tr: 1
-            },
-            {
-                n: 'Piccadilly line',
-                sh: 'Piccadilly',
-                c: 0x1c3f94,
-                stops: ['kx', 'hol'],
-                o: [2.6, 0],
-                tr: 1
-            },
-            {
-                n: 'Northern line',
-                sh: 'Northern',
-                c: 0x3a3a3a,
-                stops: ['kx', 'bank'],
-                o: [0, -2.6],
-                tr: 1
-            },
-            {
-                n: 'Bakerloo line',
-                sh: 'Bakerloo',
-                c: 0xb36305,
-                stops: ['oxf', 'wat'],
-                o: [0, 2.6],
-                tr: 1
-            },
-            {
-                n: 'Waterloo & City line',
-                sh: 'W&C',
-                c: 0x6fc2ad,
-                stops: ['wat', 'bank'],
-                o: [2.6, 2.6],
-                tr: 1
-            }],
-            lm: [['stPauls', 51.5138, -0.0984], ['shard', 51.5045, -0.0865], ['gherkin', 51.5145, -0.0803], ['bigBen', 51.5007, -0.1246], ['londonEye', 51.5033, -0.1196]],
-            water: [],
-            rivers: [[[[51.488, -0.175], [51.492, -0.145], [51.497, -0.127], [51.502, -0.123], [51.507, -0.121], [51.509, -0.112], [51.509, -0.100], [51.508, -0.090], [51.507, -0.080], [51.505, -0.072], [51.501, -0.060], [51.497, -0.048]], 3]],
-            build: {
-                n: 480,
-                h: [2, 5],
-                pal: [0xb5654a, 0x9c5a43, 0xd6cfc0, 0xc9b79c, 0x8f7d6a, 0xe3dccd, 0xa9a39a],
-                hot: {
-                    bank: 1.6,
-                    lst: 1.4
-                }
-            },
-            trees: [45, 0x4f8a45],
-            depot: 0
-        },
-        {
-            id: 'mexico',
-            city: 'Mexico City',
-            sys: 'Mexico City Metro',
-            mission: 'Aftershock',
-            flag: '🇲🇽',
-            icon: '🌋',
-            the: false,
-            ent: 'mexico',
-            stripe: '#f04e98',
-            story: 'A powerful earthquake strikes Mexico City during rush hour, forcing trains to stop as stations, tunnels and tracks face potential structural damage.',
-            basis: 'Mexico City sits on an old lakebed whose soft clay amplifies shaking. Major quakes struck on 19 September in both 1985 and 2017. The SASMEX early-warning system can sound seconds before strong shaking arrives from distant quakes.',
-            challenges: ['Evacuate passengers', 'Assess infrastructure damage', 'Deploy emergency inspection crews', 'Manage aftershocks', 'Decide which lines can safely reopen'],
-            ai: 'Predicts likely structural damage from soil, structure type and age, ranks inspection priorities, and recommends the safest order for restoring service.',
-            how: ['When the SASMEX alarm sounds, moving trains must stop before the shaking arrives. Let the AI auto-stop them, or press STOP ALL TRAINS yourself.', 'After the quake every line is suspended. Tap stations to inspect them: two city engineer crews are free, and Seismic Inspection Teams work 30% faster. Damage stays hidden until inspected.', 'Damaged stations need Maintenance & Repair Crews (each restores 20% condition) before they can reopen. A train passing a severely damaged station causes a structural failure.', 'Aftershocks can add new damage to stations you already cleared.'],
-            item: {
-                k: 'seis',
-                n: 'Seismic Inspection Team',
-                ic: '🧰',
-                c: 250000,
-                d: 'Engineers who inspect tracks, tunnels and stations 30% faster than city crews. Reusable after each inspection.',
-                move: true,
-                max: 9
-            },
-            liv: 'mex',
-            blk: [6.8, 6.8],
-            tree: 'jac',
-            sky: 0xb9d0e2,
-            ground: 0xa79c86,
-            grid: .05,
-            gsp: 56,
-            st: [['tacu', 'Tacubaya', 19.4035, -99.1871, 2.6, 'chapultepec', .45], ['bald', 'Balderas', 19.4273, -99.1490, 2.4, null, .6], ['hida', 'Hidalgo', 19.4375, -99.1471, 2.8, 'bellasArtes', .65], ['zoca', 'Zócalo/Tenochtitlan', 19.4326, -99.1323, 2.6, 'zocalo', .8], ['pino', 'Pino Suárez', 19.4258, -99.1327, 3.0, 'pyramid', .78], ['chab', 'Chabacano', 19.4089, -99.1356, 2.4, null, .7], ['pant', 'Pantitlán', 19.4155, -99.0722, 3.4, 'pantitlan', .9]],
-            ln: [{
-                n: 'Line 1',
-                sh: 'Line 1',
-                c: 0xf04e98,
-                stops: ['tacu', 'bald', 'pino', 'pant'],
-                o: [0, 0],
-                ug: true,
-                tr: 2
-            },
-            {
-                n: 'Line 2',
-                sh: 'Line 2',
-                c: 0x005eb8,
-                stops: ['hida', 'zoca', 'pino', 'chab'],
-                o: [2.6, 0],
-                ug: true,
-                tr: 2
-            },
-            {
-                n: 'Line 3',
-                sh: 'Line 3',
-                c: 0xaf9800,
-                stops: ['hida', 'bald'],
-                o: [-2.6, 0],
-                ug: true,
-                tr: 1
-            },
-            {
-                n: 'Line 9',
-                sh: 'Line 9',
-                c: 0x7a4030,
-                stops: ['tacu', 'chab', 'pant'],
-                o: [0, 2.6],
-                elev: [0, 1],
-                tr: 2
-            }],
-            lm: [['angel', 19.4270, -99.1677], ['torreLatino', 19.4339, -99.1406]],
-            far: [['volcanoes', 62, 52]],
-            water: [],
-            rivers: [],
-            build: {
-                n: 430,
-                h: [1, 3.2],
-                pal: [0xe9c46a, 0xf4a261, 0xe76f51, 0x8ecae6, 0xf1e3c8, 0xd4a5a5, 0xa7c957, 0xf6f6f2],
-                hot: {
-                    hida: .8,
-                    zoca: .3
-                }
-            },
-            trees: [70, 0x4f8f45],
-            depot: 0
-        },
-        {
-            id: 'cairo',
-            city: 'Cairo',
-            sys: 'Egypt’s Cairo Metro',
-            mission: 'Rush Hour Meltdown',
-            flag: '🇪🇬',
-            icon: '👥',
-            the: false,
-            ent: 'cairo',
-            stripe: '#1aa34a',
-            story: 'An unexpected surge in passengers overwhelms Cairo’s Metro during peak commuting hours, causing severe congestion at major transfer stations and delays across the network.',
-            basis: 'Cairo Metro is one of Africa’s busiest systems, and almost every transfer funnels through a handful of stations: Sadat, Nasser, Al-Shohadaa and Attaba. During Ramadan, nearly everyone heads home at once before iftar at sunset.',
-            challenges: ['Redistribute passengers', 'Adjust train frequencies', 'Control station entry', 'Stop overcrowding spreading to neighbouring stations'],
-            ai: 'Predicts platform crowding a minute ahead, flags hotspots before they tip over, and recommends metering, extra trains and alternative routes.',
-            how: ['Tap a station to meter entry (holding riders safely on the street) or deploy a Crowd Control & Passenger Routing System.', 'A routing system at a station steers riders to the least crowded neighbouring station whenever it passes 85% occupancy.', 'Platforms past 100% occupancy spill crowds into neighbouring stations and risk a crush.', 'The iftar rush builds toward sunset, and a match at Cairo International Stadium ends mid-shift.'],
-            item: {
-                k: 'crowd',
-                n: 'Crowd Control & Passenger Routing System',
-                ic: '🚧',
-                c: 120000,
-                d: 'Deploy at a station: staff, barriers and signs redirect riders away when it passes 85%. Can be moved.',
-                move: true,
-                max: 1
-            },
-            liv: 'cairo',
-            blk: [6, 6],
-            jit: .15,
-            tree: 'palm',
-            sky: 0xe9d3a5,
-            ground: 0xc9b48c,
-            grid: .2,
-            gsp: 56,
-            st: [['sadat', 'Sadat (Tahrir)', 30.0444, 31.2357, 3.4, 'museum'], ['nasser', 'Nasser', 30.0535, 31.2385, 2.6, null], ['shoh', 'Al-Shohadaa', 30.0618, 31.2465, 3.6, 'ramses'], ['ataba', 'Attaba', 30.0522, 31.2470, 3.2, 'ataba'], ['stad', 'Stadium', 30.0730, 31.3170, 1.6, 'stadium'], ['giza', 'Giza', 30.0106, 31.2069, 2.6, null], ['marg', 'Mar Girgis', 30.0059, 31.2299, 1.3, 'coptic']],
-            ln: [{
-                n: 'Line 1',
-                sh: 'Line 1',
-                c: 0xe2231a,
-                stops: ['marg', 'sadat', 'nasser', 'shoh'],
-                o: [0, 0],
-                tr: 2
-            },
-            {
-                n: 'Line 2',
-                sh: 'Line 2',
-                c: 0xf2b705,
-                stops: ['giza', 'sadat', 'ataba', 'shoh'],
-                o: [2.6, 0],
-                ug: true,
-                tr: 2
-            },
-            {
-                n: 'Line 3',
-                sh: 'Line 3',
-                c: 0x1aa34a,
-                stops: ['nasser', 'ataba', 'stad'],
-                o: [0, 2.6],
-                ug: true,
-                tr: 2
-            }],
-            lm: [['cairoTower', 30.0459, 31.2243], ['citadel', 30.0287, 31.2599]],
-            far: [['pyramids', -64, 24]],
-            water: [],
-            islands: [[[30.068, 31.219], [30.06, 31.218], [30.045, 31.222], [30.04, 31.226], [30.047, 31.228], [30.06, 31.224]]],
-            rivers: [[[[30.10, 31.236], [30.08, 31.226], [30.065, 31.221], [30.05, 31.226], [30.04, 31.228], [30.025, 31.226], [30.01, 31.2255], [29.99, 31.226]], 3.6]],
-            build: {
-                n: 540,
-                h: [2, 6],
-                pal: [0xd9c49b, 0xcbb48a, 0xe4d5b5, 0xbfa57c, 0xe8dcc4, 0xa88f6a],
-                hot: {
-                    sadat: .5,
-                    shoh: .5
-                },
-                minaret: true
-            },
-            trees: [50, 0x5f8f3f],
-            depot: 0
         }
         ];
-
         // ---------- geography: lat/lon -> world, gently de-cluttered so stations don't overlap
         var GEO = null,
             WP = [],
@@ -5654,81 +5542,30 @@
             });
             return 100 * sum / LN.length
         }
-        function uMeters() {
-            var open = SL.filter(function(s) {
-                    return !s.closed
-                }),
-                oc = open.length ? open.map(occ) : [0],
-                avg = oc.reduce(function(a, b) {
-                    return a + b
-                }, 0) / oc.length,
-                mx = Math.max.apply(null, oc);
-            var tr = TR.filter(function(t) {
-                    return !t.parked
-                }),
-                tc = tr.length ? tr.reduce(function(a, t) {
-                    return a + t.cond
-                }, 0) / tr.length : 0;
-            var safe = G.tot ? 100 * (1 - G.endg / G.tot) : 100,
-                res = 100 * (G.money + reserveValue()) / BUDGET,
-                rel = reliability();
-            return [{
-                n: 'Station occupancy',
-                v: 100 * (.6 * avg + .4 * mx),
-                txt: Math.round(avg * 100) + '% avg · ' + Math.round(mx * 100) + '% max',
-                th: [55, 85, 100],
-                w: 1
-            },
-            {
-                n: 'Train condition',
-                v: tc,
-                txt: Math.round(tc) + '/100',
-                th: [95, 60, 30],
-                w: .8
-            },
-            {
-                n: 'Service reliability',
-                v: rel,
-                txt: Math.round(rel) + '%',
-                th: [100, 75, 50],
-                w: .5
-            },
-            {
-                n: 'Emergency resources',
-                v: res,
-                txt: Math.round(res) + '% available',
-                th: [100, 40, 15],
-                w: .5
-            },
-            {
-                n: 'Passenger safety',
-                v: safe,
-                txt: safe.toFixed(1) + '/100',
-                th: [100, 75, 50],
-                w: 1.2
-            }];
-        }
+        // City disaster meters determine the visible crisis meter. Universal meters are removed.
+        // Passenger safety and service performance remain internal for victory and stars.
         function scoreTick(dt) {
-            var um = uMeters(),
-                cm = MOD.meters(),
-                all = um.concat(cm),
-                tgt = 0;
-            all.forEach(function(m) {
+            var cm = MOD.meters(),
+                weighted = 0,
+                totalWeight = 0;
+            cm.forEach(function(m) {
                 m.s = m.sv != null ? m.sv : sev(m.v, m.th);
-                tgt += (m.w || 1) * Math.pow(m.s, 1.4)
+                var weight = m.w || 1;
+                weighted += weight * Math.pow(Math.max(0, m.s), 1.4);
+                totalWeight += weight;
             });
-            G.um = um;
             G.cm = cm;
             G.shock *= Math.pow(.5, dt / 20);
-            tgt = clamp(100 * tgt / 4.5 + G.shock, 0, 100);
-            G.chaos += (tgt - G.chaos) * Math.min(1, dt / (tgt > G.chaos ? 4 : 8));
+            // All three city hazards count. Critical conditions plus major incidents can
+            // push the disaster level to 100%; safe conditions keep it low.
+            var target = clamp(86 * weighted / Math.max(.01, totalWeight) + G.shock, 0, 100);
+            G.chaos += (target - G.chaos) * Math.min(1, dt / (target > G.chaos ? 4 : 8));
             G.peak = Math.max(G.peak, G.chaos);
-            var w = G.w,
-                ws = clamp(100 - (w.avg - 20) * 1.6, 0, 100),
-                perf = .5 * um[2].v + .5 * ws;
+            var waitScore = clamp(100 - (G.w.avg - 20) * 1.6, 0, 100);
+            var perf = .5 * reliability() + .5 * waitScore;
             G.perf += perf * dt;
             G.ct += dt;
-            G.fs += w.fair * dt;
+            G.fs += G.w.fair * dt;
             G.perfNow = perf;
         }
         function waits() {
@@ -6167,329 +6004,6 @@
             return freeItem() ? ' (from reserve)' : ' (buys one for ' + cash(CDc.item.c) + ')'
         }
 
-        // ===== TOKYO: typhoon with a deceptive eye
-        MODS.tokyo = {
-            C: 333,
-            env: function(t, c) {
-                return 25 + 140 * Math.exp(-Math.pow((t - c) / 130, 2))
-            },
-            wind: function(t) {
-                return this.env(t, this.C) * (1 - .8 * Math.exp(-Math.pow((t - this.C) / 20, 2)))
-            },
-            ai: function(t) {
-                return this.env(t, G.t < 183 ? 390 : this.C)
-            },
-            rain: function(t) {
-                return 10 + 58 * Math.exp(-Math.pow((t - this.C + 20) / 140, 2)) * (1 - .6 * Math.exp(-Math.pow((t - this.C) / 20, 2)))
-            },
-            init: function() {
-                G.wind = 25;
-                G.rainV = 10;
-                G.ann = -1;
-                G.gust = 0;
-                G.wh = [];
-                G.whT = 0;
-                G.dm = 1;
-                SL.forEach(function(s) {
-                    s.exposed = false
-                });
-                LN.forEach(function(L) {
-                    if (L.exp)
-                        L.exp.forEach(function(e, i) {
-                            if (e >= .85) {
-                                S[L.stops[i]].exposed = true;
-                                S[L.stops[(i + 1) % L.stops.length]].exposed = true
-                            }
-                        })
-                })
-            },
-            barrier: function(s) {
-                return itemsAt(s) > 0
-            },
-            step: function(dt) {
-                var self = this;
-                G.gust = (G.gust + (Math.random() - .5) * dt * 18) * Math.pow(.9, dt);
-                G.wind = Math.max(0, this.wind(G.t) + G.gust);
-                G.rainV = this.rain(G.t);
-                if ((G.whT -= dt) <= 0) {
-                    G.whT = 1;
-                    G.wh.push(G.wind);
-                    if (G.wh.length > 30)
-                        G.wh.shift()
-                }
-                if (!G.f.trk && G.t >= 183) {
-                    G.f.trk = 1;
-                    toast('Storm-track update: the typhoon sped up');
-                    speak('New storm-track data: the typhoon is moving faster. I moved my peak-wind forecast about a minute earlier.', 8)
-                }
-                G.leave = (G.ann >= 0 && G.t - G.ann > 90) ? .03 : 0;
-                if (G.wind > 110 && Math.random() < dt * .07)
-                    flash('bolt');
-                TR.forEach(function(t) {
-                    if (t.parked || t.down > 0 || t.v < .6)
-                        return;
-                    var L = LN[t.L];
-                    if (!L.exp)
-                        return;
-                    var sg = segAt(L, t.s),
-                        e = L.exp[sg] || 0,
-                        w = G.wind * e;
-                    if (w > 90) {
-                        var a = S[L.stops[sg]],
-                            b = S[L.stops[(sg + 1) % L.stops.length]],
-                            k = (self.barrier(a) || self.barrier(b)) ? .75 : 1;
-                        if (Math.random() < .04 * (w - 90) / 22 * k * dt) {
-                            var n = t.load;
-                            t.down = 60;
-                            G.strOut += n;
-                            t.load = 0;
-                            incident(12, 'Train ' + t.id + ' was hit by wind-blown debris on exposed ' + L.sh + ' track.', n)
-                        }
-                    }
-                });
-                if (G.wind > 90)
-                    SL.forEach(function(s) {
-                        if (!s.exposed || s.closed || s.cond < 70)
-                            return;
-                        var k = self.barrier(s) ? .75 : 1;
-                        if (Math.random() < pPer30(.18 * (G.wind - 90) / 40 * k, dt)) {
-                            s.cond = Math.max(10, s.cond - 35);
-                            var n = Math.round(s.q.length * .3);
-                            closeSt(s, true);
-                            incident(10, 'Storm damage at ' + s.name + ': flying debris and flooding at the entrances. The station is closed.', n)
-                        }
-                    });
-            },
-            slope: function() {
-                var h = G.wh;
-                return h.length < 8 ? 0 : (h[h.length - 1] - h[h.length - 8]) / 7
-            },
-            demand: function(t) {
-                var m = 1 + .35 * t / TIME;
-                if (G.ann >= 0) {
-                    var a = t - G.ann;
-                    m *= a < 90 ? 2 : (G.wind < 45 && t > 425 ? .9 : .3)
-                } else if (G.wind > 100)
-                    m *= .85;
-                G.dm = m;
-                return m
-            },
-            haz: function(s) {
-                if (s.cond < 70)
-                    return .6;
-                if (!served(s) && G.wind > 65)
-                    return clamp((G.wind - 65) / 60, 0, 1);
-                return 0
-            },
-            canOpen: function(s) {
-                return s.cond < 70 ? 'Repair the storm damage at ' + s.name + ' first (send a maintenance crew)' : ''
-            },
-            stCrew: function(s) {
-                return s.cond < 95
-            },
-            lineUnsafe: function(li) {
-                var L = LN[li];
-                if (!L.exp)
-                    return '';
-                var e = Math.max.apply(null, L.exp);
-                return G.wind * e > 90 ? 'wind on its exposed viaduct is over 90 km/h' : ''
-            },
-            meters: function() {
-                return [{
-                    n: 'Wind gust speed',
-                    ic: '🌀',
-                    v: G.wind,
-                    txt: Math.round(G.wind) + ' km/h',
-                    th: [25, 65, 90],
-                    w: .4
-                }, {
-                    n: 'Rainfall intensity',
-                    ic: '🌧️',
-                    v: G.rainV,
-                    txt: Math.round(G.rainV) + ' mm/hr',
-                    th: [10, 30, 50],
-                    w: .4
-                }, {
-                    n: 'Passenger departure demand',
-                    ic: '🏃',
-                    v: 60 * G.dm,
-                    txt: Math.round(60 * G.dm) + '%',
-                    th: [60, 100, 120]
-                }]
-            },
-            sky: function() {
-                var k = clamp((G.wind - 30) / 120, 0, 1);
-                return {
-                    bg: [0x9fb0bf, 0x3c4653, k],
-                    sun: 2 - 1.5 * k,
-                    hemi: 1 - .4 * k,
-                    rain: clamp((G.rainV - 10) / 50, 0, 1) * 1.1,
-                    wind: -6 - k * 14
-                }
-            },
-            vis: function(dt, time) {
-                var self = this;
-                SOCKS.forEach(function(s, i) {
-                    s.rotation.y = -.4 + Math.sin(time * (1 + G.wind / 30) + i) * .25 * clamp(G.wind / 70, .2, 1);
-                    s.scale.y = clamp(G.wind / 90, .3, 1.1)
-                });
-                SL.forEach(function(s) {
-                    s.o.barG.visible = self.barrier(s);
-                    s.o.dmg.visible = s.cond < 70;
-                    s.o.crew.visible = crewOn('st', s)
-                })
-            },
-            extra: function() {
-                return (G.ann >= 0 ? 'Suspension announced ' + fmt(G.t - G.ann) + ' ago.' : 'No suspension announced yet.') + ' Viaduct limit: 90 km/h. Stranded riders: ' + Math.round(stranded()) + '.'
-            },
-            buttons: function() {
-                return [{
-                    id: 'annb',
-                    txt: 'Announce suspension',
-                    fn: announce,
-                    dis: function() {
-                        return G.ann >= 0
-                    }
-                }]
-            },
-            label: function(s) {
-                if (s.cond < 70)
-                    return ['damaged', 'hot'];
-                return served(s) ? [s.exposed && this.barrier(s) ? '🛡️' : '', ''] : ['no service', 'hot']
-            },
-            detail: function(s) {
-                return (s.exposed ? 'Next to an exposed viaduct.' : 'Sheltered from the worst wind.') + ' Condition ' + Math.round(s.cond) + '%.' + (this.barrier(s) ? ' Storm barriers installed.' : '')
-            },
-            acts: function(s) {
-                var it = CDc.item;
-                if (this.barrier(s) || itemsPlaced(s))
-                    return [];
-                return [{
-                    t: 'Install storm barriers' + itemNote(),
-                    fn: function() {
-                        deployItem(s)
-                    }
-                }]
-            },
-            forecast: function() {
-                var c = G.t < 183 ? 390 : this.C;
-                return 'Storm-track model: peak exposed-track gusts about 165 km/h at ' + fmt(TIME - c) + ' on the clock. Confidence ' + (G.t < 183 ? 'medium (old track data)' : 'high') + '.'
-            },
-            recs: function() {
-                var self = this,
-                    r = [];
-                function mx(f, a, b) {
-                    var m = 0;
-                    for (var h = a; h <= b; h += 5)
-                        m = Math.max(m, f.call(self, G.t + h));
-                    return m
-                }
-                if (G.ann < 0 && G.t > 30 && mx(self.ai, 0, 200) >= 90)
-                    r.push({
-                        key: 'ann',
-                        text: 'Announce the planned suspension now.',
-                        why: 'My storm-track model has open-track gusts passing 90 km/h within about 3 minutes. Early notice lets riders get home before lines stop.',
-                        conf: G.t < 183 ? 71 : 86,
-                        score: 92,
-                        good: mx(self.wind, 0, 260) >= 90,
-                        apply: announce,
-                        lesson: 'The storm was still far off, so announcing this early cost ridership without protecting anyone yet.'
-                    });
-                if (G.t < this.C - 40)
-                    SL.forEach(function(s) {
-                        if (!s.exposed || self.barrier(s) || itemsPlaced(s) || s.cond < 70)
-                            return;
-                        if (mx(self.ai, 0, 240) >= 90)
-                            r.push({
-                                need: 'item',
-                                key: 'bar' + s.id,
-                                text: 'Install storm barriers at ' + s.name + itemNote() + '.',
-                                why: 'It sits next to an exposed viaduct. Barriers cut storm damage risk there by 25% before gusts pass 90 km/h.',
-                                conf: 75,
-                                score: 57 + s.rate * 3,
-                                good: true,
-                                apply: function() {
-                                    deployItem(s)
-                                }
-                            })
-                    });
-                SL.forEach(function(s) {
-                    if (s.cond < 70 && !crewOn('st', s))
-                        r.push({
-                            need: 'crew',
-                            key: 'rs' + s.id,
-                            text: 'Send a maintenance crew to repair ' + s.name + buyNote('crew') + '.',
-                            why: 'Storm damage has it closed. Each crew restores 20% condition; it can reopen at 70%.',
-                            conf: 90,
-                            score: 72,
-                            good: G.wind < 110,
-                            apply: function() {
-                                crewJob('st', s, s.name)
-                            },
-                            lesson: 'Gusts were still strong enough to damage it again.'
-                        })
-                });
-                LN.forEach(function(L, i) {
-                    var ex = L.exp ? Math.max.apply(null, L.exp) : 0;
-                    if (!L.susp && ex > 0) {
-                        var f = self.ai(G.t + 40) * ex;
-                        if (f >= 86)
-                            r.push({
-                                key: 'sus' + i,
-                                text: 'Suspend ' + lname(L) + ' now.',
-                                why: 'Gusts on its exposed track forecast at ' + Math.round(f) + ' km/h within 40 s (limit 90).',
-                                conf: 84,
-                                score: 96,
-                                good: mx(self.wind, 0, 60) * ex >= 83,
-                                apply: function() {
-                                    setSusp(i, true)
-                                },
-                                lesson: 'Wind on that track stayed below the limit, so suspending cost service for no safety gain.'
-                            })
-                    }
-                    if (L.susp) {
-                        if (ex === 0)
-                            r.push({
-                                key: 'res' + i,
-                                text: 'Restore ' + lname(L) + '.',
-                                why: 'It runs in tunnels, so typhoon winds can’t reach its tracks.',
-                                conf: 94,
-                                score: 75,
-                                good: true,
-                                apply: function() {
-                                    setSusp(i, false)
-                                }
-                            });
-                        else {
-                            var now = G.wind * ex,
-                                sl = self.slope();
-                            if (now < 70 && (sl < -.3 || G.t > 450))
-                                r.push({
-                                    key: 'res' + i,
-                                    text: 'Restore ' + lname(L) + '.',
-                                    why: 'Measured gusts on its exposed track are down to ' + Math.round(now) + ' km/h and ' + (sl < 0 ? 'falling' : 'steady') + '.',
-                                    conf: G.t < 400 ? 63 : 88,
-                                    score: 70,
-                                    good: mx(self.wind, 0, 80) * ex < 90,
-                                    apply: function() {
-                                        setSusp(i, false)
-                                    },
-                                    lesson: 'That sudden calm was the eye of the typhoon. The storm’s back wall pushed gusts over the limit again within a minute.'
-                                })
-                        }
-                    }
-                });
-                return r
-            }
-        };
-        function announce() {
-            if (G.ann >= 0)
-                return;
-            G.ann = G.t;
-            toast('Planned suspension announced');
-            speak('Announcement is out. Expect a rush home for about a minute and a half, then quieter stations.', 7)
-        }
-
         // ===== NEW YORK: floodwater spreading downhill, with a failing sensor (w is 0-100; depth in cm = w x 0.3)
         MODS.nyc = {
             rainMM: function(t) {
@@ -6866,1115 +6380,22 @@
             }
         };
 
-        // ===== LONDON: heat vs crowds vs a power cap
-        MODS.london = {
-            out: function(t) {
-                return 31 + 8 * Math.pow(Math.sin(PI * clamp(t / 550, 0, 1)), .7)
-            },
-            init: function() {
-                SL.forEach(function(s) {
-                    s.T = s.p + 1.5;
-                    s.arr = 0;
-                    s.th = []
-                });
-                G.cap = 12;
-                G.power = 0;
-                G.outT = 31;
-                G.brown = false;
-                G.vent = 90
-            },
-            step: function(dt) {
-                var self = this;
-                G.outT = this.out(G.t);
-                if (!G.f.grid && G.t >= 283) {
-                    G.f.grid = 1;
-                    G.cap = 9.6;
-                    toast('National Grid emergency: cut peak draw by 20%');
-                    speak('The grid operator just cut our allowance to 9.6 MW. I’m re-optimising: expect me to suggest pulling trains or moving cooling.', 8)
-                }
-                var p = 3,
-                    cu = G.items.filter(function(x) {
-                        return x.at && x.eta <= 0
-                    }).length;
-                TR.forEach(function(t) {
-                    if (!t.parked)
-                        p += t.down > 0 ? .2 : t.v > .3 ? 1.3 : .5
-                });
-                p += cu * 1;
-                G.power = p;
-                G.brown = p > G.cap;
-                if (G.brown)
-                    G.overSec += dt;
-                G.spdMul = G.brown ? .55 : 1;
-                G.vent = clamp(90 - (G.outT - 31) * 2.5 - (G.brown ? 25 : 0) + cu * 3, 10, 100);
-                SL.forEach(function(s) {
-                    s.arr *= Math.exp(-dt / 30);
-                    var tg = s.p + (G.outT - 30) * .45 + Math.min(1.4, occ(s)) * 4.5 + s.arr * .35 - itemsAt(s) * 3 + (90 - G.vent) * .04;
-                    s.T += (tg - s.T) * Math.min(1, dt * .035);
-                    if (!s.closed && s.T > 32 && s.q.length > 12 && Math.random() < .008 * (s.T - 32) * Math.min(1.5, occ(s) * 1.5) * dt) {
-                        s.delay = 8;
-                        incident(5, 'A passenger collapsed from heat on the platform at ' + s.name + '.', 1)
-                    }
-                });
-            },
-            hist: function(s) {
-                s.th.push(s.T);
-                if (s.th.length > 40)
-                    s.th.shift()
-            },
-            onArrive: function(s) {
-                s.arr += 1
-            },
-            addOk: function() {
-                return G.power + 1.15 < G.cap
-            },
-            haz: function(s) {
-                return clamp((s.T - 32) / 3, 0, 1) * Math.min(1, occ(s) * 1.5)
-            },
-            meters: function() {
-                var hot = Math.max.apply(null, SL.map(function(s) {
-                        return s.T
-                    })),
-                    num = 0,
-                    den = 0;
-                SL.forEach(function(s) {
-                    num += s.q.length * clamp((s.T - 28) / 7, 0, 1);
-                    den += s.q.length
-                });
-                var risk = den ? 100 * num / den : 0;
-                return [{
-                    n: 'Platform temperature (hottest)',
-                    ic: '🌡️',
-                    v: hot,
-                    txt: hot.toFixed(1) + ' °C',
-                    th: [29, 32, 35]
-                }, {
-                    n: 'Ventilation performance',
-                    ic: '💨',
-                    v: G.vent,
-                    txt: Math.round(G.vent) + '%',
-                    th: [90, 60, 40]
-                }, {
-                    n: 'Heat exposure risk',
-                    ic: '🥵',
-                    v: risk,
-                    txt: Math.round(risk) + '%',
-                    th: [15, 50, 75]
-                }]
-            },
-            sky: function() {
-                var k = clamp((G.outT - 31) / 8, 0, 1);
-                return {
-                    bg: [0xf3dcae, 0xf0a868, k],
-                    sun: 2.1 + .5 * k,
-                    hemi: .95,
-                    sunC: 0xffe0b0
-                }
-            },
-            vis: function(dt, time) {
-                SL.forEach(function(s) {
-                    var o = s.o,
-                        k = clamp((s.T - 27) / 8, 0, 1);
-                    o.ring.material.color.setRGB(.2 + .8 * k, .6 - .3 * k + (k < .5 ? .2 : 0), 1 - k).convertSRGBToLinear();
-                    o.ring.material.opacity = .45 + .4 * k + (s.T > 32 ? Math.abs(Math.sin(time * 5)) * .15 : 0);
-                    var n = itemsPlaced(s);
-                    o.cool[0].visible = n > 0;
-                    o.cool[1].visible = n > 1;
-                    o.fan.forEach(function(f) {
-                        f.rotation.y += dt * 14
-                    })
-                })
-            },
-            extra: function() {
-                return 'Street ' + G.outT.toFixed(1) + ' °C · grid ' + G.power.toFixed(1) + ' / ' + G.cap.toFixed(1) + ' MW' + (G.brown ? ' — OVER THE CAP: trains slowed, ventilation cut.' : '.')
-            },
-            label: function(s) {
-                return ['🌡' + s.T.toFixed(1) + '°', s.T > 32 ? 'hot' : s.T < 29 ? 'ok' : '']
-            },
-            detail: function(s) {
-                return 'Platform ' + s.T.toFixed(1) + ' °C. ' + (s.p >= 27 ? 'Deep-level tube platform.' : 'Shallower platforms.') + ' Cooling units here: ' + itemsPlaced(s) + '.'
-            },
-            acts: function(s) {
-                var a = [],
-                    n = itemsPlaced(s);
-                if (n)
-                    a.push({
-                        t: 'Remove a cooling unit',
-                        fn: function() {
-                            recallItem(s)
-                        }
-                    });
-                if (n < 2) {
-                    var head = G.power + 1 <= G.cap;
-                    a.push({
-                        t: head ? 'Deploy cooling unit' + itemNote() : 'Not enough grid capacity for cooling',
-                        dis: !head,
-                        fn: function() {
-                            deployItem(s)
-                        }
-                    });
-                    var src = null,
-                        sv = 1e9;
-                    G.items.forEach(function(c) {
-                        if (c.at && c.at !== s.id && S[c.at].T < sv) {
-                            sv = S[c.at].T;
-                            src = c
-                        }
-                    });
-                    if (src)
-                        a.push({
-                            t: 'Move cooling from ' + S[src.at].name + ' (free)',
-                            fn: function() {
-                                deployItem(s, src)
-                            }
-                        })
-                }
-                return a
-            },
-            forecast: function() {
-                var l = SL.slice().sort(function(a, b) {
-                    return (b.T + slope(b.th) * 60) - (a.T + slope(a.th) * 60)
-                }).slice(0, 3);
-                return 'Heat model, 60 s ahead: ' + l.map(function(s) {
-                    return s.name.split(' ')[0] + ' ' + (s.T + slope(s.th) * 60).toFixed(1) + '°'
-                }).join(', ') + '. Power headroom ' + (G.cap - G.power).toFixed(1) + ' MW.'
-            },
-            recs: function() {
-                var self = this,
-                    r = [];
-                function f(s) {
-                    return s.T + slope(s.th) * 60
-                }
-                function ex(s) {
-                    return Math.max(0, f(s) - 30.5) * Math.max(12, s.q.length)
-                }
-                var unc = SL.filter(function(s) {
-                        return itemsPlaced(s) < 1 && !s.closed
-                    }),
-                    tgt = null,
-                    tv = 0;
-                unc.forEach(function(s) {
-                    if (f(s) > tv) {
-                        tv = f(s);
-                        tgt = s
-                    }
-                });
-                var emx = Math.max.apply(null, unc.map(ex).concat([0]));
-                function lc(t) {
-                    var b = null,
-                        bv = -1;
-                    unc.forEach(function(s) {
-                        if (ex(s) > bv) {
-                            bv = ex(s);
-                            b = s
-                        }
-                    });
-                    return 'I ranked platforms by temperature alone. ' + (b && b !== t ? b.name + ' had far more people exposed to the heat, so cooling there would have protected more riders.' : 'The heat risk there was lower than it looked.')
-                }
-                if (tgt && tv > 31) {
-                    var free = freeItem();
-                    if ((free || G.money > CDc.item.c * 2) && G.power + 1 <= G.cap)
-                        r.push({
-                            need: 'item',
-                            key: 'cd' + tgt.id,
-                            text: 'Deploy a cooling unit at ' + tgt.name + itemNote() + '.',
-                            why: 'Hottest platform: forecast ' + tv.toFixed(1) + ' °C in 60 s. One unit gives −3 °C for 1 MW.',
-                            conf: 79,
-                            score: 80 + tv,
-                            good: ex(tgt) >= .7 * emx,
-                            apply: function() {
-                                deployItem(tgt)
-                            },
-                            lesson: lc(tgt)
-                        });
-                    else {
-                        var src = null,
-                            sv = 1e9;
-                        G.items.forEach(function(c) {
-                            if (!c.at)
-                                return;
-                            var v = f(S[c.at]);
-                            if (v < sv) {
-                                sv = v;
-                                src = c
-                            }
-                        });
-                        if (src && tv - sv > 1.5) {
-                            var ss = S[src.at];
-                            r.push({
-                                key: 'cm' + ss.id + tgt.id,
-                                text: 'Move the cooling unit from ' + ss.name + ' to ' + tgt.name + '.',
-                                why: tgt.name + ' is forecast ' + (tv - sv).toFixed(1) + ' °C hotter than ' + ss.name + '.',
-                                conf: 74,
-                                score: 70 + (tv - sv) * 3,
-                                good: ex(tgt) > ex(ss) && ex(tgt) >= .7 * emx,
-                                apply: function() {
-                                    deployItem(tgt, src)
-                                },
-                                lesson: lc(tgt)
-                            })
-                        }
-                    }
-                }
-                var run = TR.filter(function(t) {
-                    return !t.parked
-                }).length;
-                if (G.power > G.cap * .96 && run > LN.length) {
-                    var best = -1,
-                        bs = 1e9;
-                    LN.forEach(function(L, i) {
-                        var n = trainsOn(i);
-                        if (n < 2)
-                            return;
-                        var q = lineQ(i) / n;
-                        if (q < bs) {
-                            bs = q;
-                            best = i
-                        }
-                    });
-                    if (best >= 0) {
-                        var L = LN[best];
-                        r.push({
-                            key: 'pk' + best,
-                            text: 'Send a ' + L.sh + ' train to the depot.',
-                            why: 'Power draw ' + G.power.toFixed(1) + ' of ' + G.cap.toFixed(1) + ' MW. Fewest waiting riders per train on ' + lname(L) + '. Saves about 1 MW plus braking heat.',
-                            conf: 83,
-                            score: 95,
-                            good: lineQ(best) / Math.max(1, trainsOn(best) - 1) < 110,
-                            apply: function() {
-                                parkTrain(best)
-                            },
-                            lesson: 'That line was already crowded; losing a train pushed its platforms into dangerous crowding.'
-                        })
-                    }
-                }
-                SL.forEach(function(s) {
-                    if (!s.closed && f(s) > 34.5)
-                        r.push({
-                            key: 'cl' + s.id,
-                            text: 'Close ' + s.name + ' until it cools.',
-                            why: 'Forecast ' + f(s).toFixed(1) + ' °C. Fewer people and trains let it cool.',
-                            conf: 70,
-                            score: 60 + f(s),
-                            good: s.T > 33,
-                            apply: function() {
-                                closeSt(s)
-                            },
-                            lesson: 'It was cooling on its own; closing it pushed riders onto nearby hot platforms.'
-                        });
-                    if (s.closed && f(s) < 31)
-                        r.push({
-                            key: 'op' + s.id,
-                            text: 'Reopen ' + s.name + '.',
-                            why: 'Platform temperature is down to ' + s.T.toFixed(1) + ' °C.',
-                            conf: 84,
-                            score: 50,
-                            good: s.T < 32.5,
-                            apply: function() {
-                                openSt(s)
-                            }
-                        })
-                });
-                return r
-            }
-        };
-
-        // ===== MEXICO CITY: early warning, hidden damage, aftershocks, and a model blind spot
-        var ROM = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
-        MODS.mexico = {
-            init: function() {
-                SL.forEach(function(s) {
-                    s.known = false;
-                    s.stale = false;
-                    s.insp = 0;
-                    s.inspBy = null;
-                    s.risk = 0;
-                    s.blind = false;
-                    s.inc = false
-                });
-                G.ecrews = 2;
-                G.post = false;
-                G.halt = false;
-                G.shake = 0;
-                G.mmi = 2;
-                G.alertOn = null;
-                G.evac = 0;
-                G.ev = [{
-                    a: 40,
-                    h: 52,
-                    main: 1
-                }, {
-                    a: 310,
-                    h: 318
-                }, {
-                    a: 450,
-                    h: 457
-                }];
-                G.autoStop = $('#astop').checked
-            },
-            step: function(dt) {
-                var self = this;
-                G.autoStop = $('#astop').checked;
-                G.ev.forEach(function(e) {
-                    if (!e.al && G.t >= e.a) {
-                        e.al = 1;
-                        self.alert(e)
-                    }
-                    if (!e.hit && G.t >= e.h) {
-                        e.hit = 1;
-                        self.hit(e)
-                    }
-                });
-                if (G.shake > 0) {
-                    G.shake -= dt;
-                    G.mmi = G.shake > 0 ? (G.qm || 7) - (G.shake < 2 ? 2 : 0) : 2;
-                    if (G.shake <= 0) {
-                        G.mmi = 2;
-                        G.alertOn = null;
-                        G.haltUntil = G.t + 1.5
-                    }
-                }
-                SL.forEach(function(s) {
-                    if (s.insp > 0) {
-                        s.insp -= dt;
-                        if (s.insp <= 0) {
-                            s.insp = 0;
-                            s.known = true;
-                            s.stale = false;
-                            if (s.inspBy === 'city')
-                                G.ecrews++;
-                            else if (s.inspBy) {
-                                s.inspBy.at = null;
-                                G.inv.item++
-                            }
-                            s.inspBy = null;
-                            var m = s.cond >= 80 ? 'no structural damage, clear to reopen' : s.cond >= 50 ? 'minor damage, needs 1 repair crew' : 'severe damage, repair before any train passes';
-                            toast(s.name + ': ' + m.split(',')[0]);
-                            speak('Inspection at ' + s.name + ': ' + m + '. Condition ' + Math.round(s.cond) + '%.', 7)
-                        }
-                    }
-                });
-            },
-            alert: function(e) {
-                G.alertOn = e;
-                flash('quake');
-                toast('SASMEX alert: strong shaking in ' + (e.h - e.a) + ' s');
-                if (G.autoStop) {
-                    G.halt = true;
-                    speak('Seismic early warning received. I applied emergency brakes on every train, as you authorised.', 7)
-                } else
-                    speak('SASMEX alert! Press STOP ALL TRAINS. Auto-stop is off, so I can’t brake for you.', 8)
-            },
-            hit: function(e) {
-                G.tl = G.t;
-                G.shake = e.main ? 8 : 5;
-                G.qm = e.main ? 7 : 5;
-                G.mmi = G.qm;
-                flash('quake');
-                toast(e.main ? 'Earthquake: MMI VII' : 'Aftershock: MMI V');
-                TR.forEach(function(t) {
-                    if (t.parked || t.down > 0)
-                        return;
-                    if (t.v > .45) {
-                        var n = t.load;
-                        t.down = 60;
-                        t.cond = Math.max(5, t.cond - 40);
-                        G.strOut += n;
-                        t.load = 0;
-                        incident(14, 'Train ' + t.id + ' derailed because it was still moving when the shaking hit.', n)
-                    }
-                });
-                G.halt = true;
-                if (e.main) {
-                    G.post = true;
-                    G.tq = G.t;
-                    var ev = 0;
-                    TR.forEach(function(t) {
-                        if (!t.parked) {
-                            G.del += t.load;
-                            t.load = 0;
-                            t.held = true
-                        }
-                    });
-                    SL.forEach(function(s) {
-                        ev += s.q.length;
-                        closeSt(s, true)
-                    });
-                    G.evac = ev;
-                    LN.forEach(function(L) {
-                        L.susp = true
-                    });
-                    SL.forEach(function(s) {
-                        var d = Math.random() < .08 + .42 * s.p ? (Math.random() < .45 ? 2 : 1) : 0;
-                        s.cond = d === 2 ? 28 + Math.random() * 12 : d === 1 ? 58 + Math.random() * 12 : 86 + Math.random() * 9;
-                        s.risk = clamp(.15 + .62 * s.p + (Math.random() - .5) * .16, .05, .95)
-                    });
-                    S.pant.cond = 32;
-                    S.pant.blind = true;
-                    S.pant.risk = .12;
-                    var o = SL.filter(function(s) {
-                        return !s.blind
-                    }).sort(function(a, b) {
-                        return b.p - a.p
-                    })[0];
-                    o.cond = Math.min(o.cond, 64);
-                    speak('Shaking has stopped. I suspended every line and am evacuating all stations (' + ev + ' riders). Damage is hidden until inspected; my risk estimates are on the station tags.', 10)
-                }
-                else {
-                    SL.forEach(function(s) {
-                        if (!G.post)
-                            return;
-                        if (Math.random() < .12 + .3 * s.p + (s.cond < 80 ? .25 : 0)) {
-                            s.cond = Math.max(15, s.cond - 25);
-                            s.inc = false
-                        }
-                        if (s.known)
-                            s.stale = true;
-                        s.risk = clamp(s.risk + .12, 0, .95)
-                    });
-                    speak('Aftershock over. Any station could have new damage, so earlier inspections may be out of date.', 8)
-                }
-            },
-            onPass: function(t, s) {
-                if (!G.post || s.cond >= 80)
-                    return;
-                if (s.cond < 50) {
-                    var n = t.load;
-                    t.down = 999;
-                    t.cond = 5;
-                    G.strOut += n;
-                    t.load = 0;
-                    s.known = true;
-                    s.stale = false;
-                    LN.forEach(function(L) {
-                        if (L.stops.indexOf(s.id) >= 0)
-                            L.susp = true
-                    });
-                    flash('riot');
-                    incident(24, 'Structural failure at ' + s.name + ' as Train ' + t.id + ' passed. Every line through it is suspended.', n)
-                }
-                else if (!s.inc && Math.random() < .3) {
-                    s.inc = true;
-                    t.down = 30;
-                    s.known = true;
-                    s.stale = false;
-                    incident(6, 'Debris fell on the track at ' + s.name + ' (minor damage).', Math.round(t.load * .3))
-                }
-            },
-            demand: function(t) {
-                return G.post ? .3 + .7 * clamp((t - G.tq) / 300, 0, 1) : 1 + .3 * t / TIME
-            },
-            haz: function(s) {
-                if (G.shake > 0)
-                    return 1;
-                if (G.post && !s.closed && s.cond < 80)
-                    return (80 - s.cond) / 60;
-                return 0
-            },
-            canOpen: function(s) {
-                if (!G.post)
-                    return '';
-                if (!s.known || s.stale)
-                    return 'Inspect ' + s.name + ' before reopening it';
-                if (s.cond < 80)
-                    return 'Repair ' + s.name + ' first (condition ' + Math.round(s.cond) + '%, needs 80%)';
-                return ''
-            },
-            lineUnsafe: function(li) {
-                var b = LN[li].stops.filter(function(id) {
-                    var s = S[id];
-                    return G.post && s.known && !s.stale && s.cond < 80
-                })[0];
-                return b ? S[b].name + ' is damaged' : ''
-            },
-            stCrew: function(s) {
-                return G.post && s.known && !s.stale && s.cond < 80
-            },
-            onRepair: function(s) {
-                s.inc = false
-            },
-            meters: function() {
-                var cond = SL.reduce(function(a, s) {
-                        return a + s.cond
-                    }, 0) / SL.length,
-                    v = 100,
-                    txt = 'No quake yet';
-                var sv = 0;
-                if (G.post) {
-                    var done = SL.filter(function(s) {
-                        return s.known && !s.stale
-                    }).length;
-                    v = 100 * done / SL.length;
-                    txt = Math.round(v) + '%';
-                    sv = v >= 50 ? .5 * (100 - v) / 50 : .5 + .35 * (50 - v) / 50;
-                    var crit = SL.filter(function(s) {
-                        return (!s.known || s.stale) && s.risk >= .5
-                    }).length;
-                    if (crit && G.t - G.tl > 60) {
-                        sv = Math.min(1.6, 1.1 + (G.t - G.tl - 60) / 200);
-                        txt += ' · critical sections uninspected'
-                    }
-                }
-                return [{
-                    n: 'Ground shaking intensity',
-                    ic: '🌋',
-                    v: G.mmi,
-                    txt: 'MMI ' + ROM[Math.round(G.mmi)],
-                    th: [2, 4.5, 6],
-                    w: .4
-                }, {
-                    n: 'Infrastructure condition',
-                    ic: '🏗️',
-                    v: cond,
-                    txt: Math.round(cond) + '%',
-                    th: [95, 75, 60],
-                    w: .8
-                }, {
-                    n: 'Track inspection completion',
-                    ic: '🔍',
-                    v: v,
-                    sv: sv,
-                    txt: txt,
-                    th: [100, 50, 0]
-                }]
-            },
-            sky: function() {
-                var k = G.post ? clamp(1 - (G.t - G.tq) / 120, 0, 1) * .7 : 0;
-                return {
-                    bg: [0xb9d0e2, 0xc9b38f, k],
-                    sun: 2,
-                    hemi: 1
-                }
-            },
-            vis: function(dt, time) {
-                SL.forEach(function(s) {
-                    var o = s.o,
-                        d = G.post ? (s.cond < 50 ? 2 : s.cond < 80 ? 1 : 0) : 0;
-                    o.cr.visible = d > 0;
-                    o.rub.visible = d > 1;
-                    o.crew.visible = crewOn('st', s);
-                    o.eng.visible = s.insp > 0;
-                    o.dust.forEach(function(p, k) {
-                        p.visible = d > 1;
-                        if (p.visible) {
-                            var u = (time * .35 + k * .25) % 1;
-                            p.position.set(Math.cos(k * 1.7) * 2.6, .5 + u * 3, Math.sin(k * 1.7) * 2.6);
-                            p.scale.setScalar(.6 + u * 1.6);
-                            p.material.opacity = .45 * (1 - u)
-                        }
-                    })
-                })
-            },
-            extra: function() {
-                var ph = !G.post ? (G.alertOn ? 'SEISMIC ALERT' : 'Normal rush-hour service') : (G.shake > 0 ? 'Shaking' : 'Post-quake recovery');
-                return ph + (G.alertOn ? ': shaking in ' + Math.max(0, Math.ceil(G.alertOn.h - G.t)) + ' s' + (G.halt ? ' — trains braking.' : ' — trains still moving!') : '.') + (G.post ? ' City engineer crews free: ' + G.ecrews + ' of 2. Seismic teams free: ' + G.items.filter(function(x) {
-                    return !x.at
-                }).length + '.' : '')
-            },
-            buttons: function() {
-                return [{
-                    id: 'stopb',
-                    txt: 'STOP ALL TRAINS',
-                    cls: 'red',
-                    fn: function() {
-                        if (G.halt)
-                            return;
-                        G.halt = true;
-                        G.haltUntil = G.t + 5;
-                        toast('Emergency brakes applied');
-                        if (G.alertOn)
-                            speak('Brakes on. Good reaction.', 4)
-                    },
-                    dis: function() {
-                        return G.halt
-                    }
-                }]
-            },
-            label: function(s) {
-                if (!G.post)
-                    return ['', ''];
-                if (crewOn('st', s))
-                    return ['🔧 repairing', ''];
-                if (s.insp > 0)
-                    return ['🔍 ' + Math.ceil(s.insp) + 's', ''];
-                if (s.known && !s.stale)
-                    return [s.cond >= 80 ? '✔ clear' : s.cond >= 50 ? '◐ minor ' + Math.round(s.cond) + '%' : '✖ severe ' + Math.round(s.cond) + '%', s.cond >= 80 ? 'ok' : 'hot'];
-                return ['AI risk ' + Math.round(s.risk * 100) + '%' + (s.stale ? ' ?' : ''), s.risk > .5 ? 'hot' : '']
-            },
-            detail: function(s) {
-                if (!G.post)
-                    return 'Soil: ' + (s.p > .7 ? 'soft lakebed clay' : 'firmer ground') + '.';
-                if (s.known && !s.stale)
-                    return 'Inspected: condition ' + Math.round(s.cond) + '%' + (s.cond < 80 ? ' — needs repair crews to reach 80%.' : ' — clear.');
-                return 'Uninspected' + (s.stale ? ' since the last aftershock' : '') + '. AI damage risk ' + Math.round(s.risk * 100) + '%.'
-            },
-            acts: function(s) {
-                var a = [];
-                if (!G.post || s.insp > 0 || (s.known && !s.stale))
-                    return a;
-                var team = freeItem();
-                a.push({
-                    t: team ? 'Inspect with Seismic Inspection Team (30% faster)' : G.ecrews > 0 ? 'Inspect with city engineer crew (free)' : 'Inspect: buy a Seismic Inspection Team (' + cash(CDc.item.c) + ')',
-                    fn: function() {
-                        inspect(s)
-                    }
-                });
-                if (team && G.ecrews > 0)
-                    a.push({
-                        t: 'Inspect with city engineer crew (free, slower)',
-                        fn: function() {
-                            inspect(s, true)
-                        }
-                    });
-                return a
-            },
-            openWarn: function(s) {
-                return ''
-            },
-            forecast: function() {
-                if (!G.post)
-                    return G.alertOn ? 'SASMEX early warning active. Strong shaking in ' + Math.max(0, Math.ceil(G.alertOn.h - G.t)) + ' s.' : 'Seismic network quiet. Damage model on standby.';
-                var l = SL.filter(function(s) {
-                    return !s.known || s.stale
-                }).sort(function(a, b) {
-                    return b.risk - a.risk
-                }).slice(0, 3);
-                return l.length ? 'Damage model (soil, structure age, construction): highest risk ' + l.map(function(s) {
-                    return s.name.split('/')[0] + ' ' + Math.round(s.risk * 100) + '%'
-                }).join(', ') + '.' : 'All stations inspected.'
-            },
-            recs: function() {
-                var r = [];
-                if (G.alertOn && !G.halt)
-                    r.push({
-                        key: 'stop',
-                        text: 'Stop all trains now.',
-                        why: 'SASMEX early warning: strong shaking in ' + Math.max(0, Math.ceil(G.alertOn.h - G.t)) + ' s. Moving trains can derail.',
-                        conf: 99,
-                        score: 999,
-                        good: true,
-                        apply: function() {
-                            G.halt = true;
-                            G.haltUntil = G.t + 5
-                        }
-                    });
-                if (!G.post)
-                    return r;
-                var pend = SL.filter(function(s) {
-                    return (!s.known || s.stale) && s.insp <= 0
-                });
-                if ((G.ecrews > 0 || freeItem()) && pend.length) {
-                    var b = null,
-                        bv = -1;
-                    pend.forEach(function(s) {
-                        var v = s.risk * (.5 + s.rate / 3.6);
-                        if (v > bv) {
-                            bv = v;
-                            b = s
-                        }
-                    });
-                    var others = pend.filter(function(s) {
-                        return s !== b && s.cond < 80
-                    });
-                    r.push({
-                        need: G.ecrews > 0 ? null : 'item',
-                        key: 'in' + b.id,
-                        text: 'Inspect ' + b.name + ' first.',
-                        why: 'Damage risk ' + Math.round(b.risk * 100) + '% (soft lakebed soil, older structure) and one of the busier stations.',
-                        conf: 72,
-                        score: 85,
-                        good: b.cond < 80 || !others.length,
-                        apply: function() {
-                            inspect(b)
-                        },
-                        lesson: S.pant.cond < 80 && (!S.pant.known || S.pant.stale) ? 'My damage model had no data on elevated viaducts, so it rated Pantitlán at 12%. Its viaduct had rubble visible in the 3D view.' : 'That station was undamaged while others were not.'
-                    })
-                }
-                SL.forEach(function(s) {
-                    if (s.known && !s.stale && s.cond < 80 && !crewOn('st', s))
-                        r.push({
-                            need: 'crew',
-                            key: 'rp' + s.id,
-                            text: 'Send a maintenance crew to ' + s.name + buyNote('crew') + '.',
-                            why: 'Inspection found ' + (s.cond < 50 ? 'severe' : 'minor') + ' damage (condition ' + Math.round(s.cond) + '%). Each crew restores 20%; it needs 80% to reopen.',
-                            conf: 95,
-                            score: 70,
-                            good: true,
-                            apply: function() {
-                                crewJob('st', s, s.name)
-                            }
-                        });
-                    if (s.closed && !MODS.mexico.canOpen(s) && s.lines.some(function(li) {
-                        return !LN[li].susp
-                    }))
-                        r.push({
-                            key: 'op' + s.id,
-                            text: 'Reopen ' + s.name + ' to let riders in.',
-                            why: 'Inspected and clear.',
-                            conf: 95,
-                            score: 62,
-                            good: true,
-                            apply: function() {
-                                openSt(s)
-                            }
-                        })
-                });
-                LN.forEach(function(L, i) {
-                    if (!L.susp)
-                        return;
-                    var ok = true,
-                        allk = true,
-                        bad = false;
-                    L.stops.forEach(function(id) {
-                        var s = S[id];
-                        if (s.known && !s.stale) {
-                            if (s.cond < 80)
-                                ok = false
-                        } else {
-                            allk = false;
-                            if (s.risk >= .25)
-                                ok = false
-                        }
-                        if (s.cond < 80)
-                            bad = true
-                    });
-                    if (ok)
-                        r.push({
-                            key: 'rl' + i,
-                            text: 'Reopen ' + lname(L) + '.',
-                            why: allk ? 'Every station on the line is inspected and clear.' : 'Its stations are inspected or rated low risk by my damage model.',
-                            conf: allk ? 92 : 74,
-                            score: 66,
-                            good: !bad,
-                            apply: function() {
-                                setSusp(i, false)
-                            },
-                            lesson: L.stops.indexOf('pant') >= 0 && S.pant.cond < 80 ? 'Pantitlán was uninspected and my 12% rating was wrong: its viaduct was badly damaged.' : 'An uninspected station on that line was damaged.'
-                        })
-                });
-                return r
-            }
-        };
-        function inspect(s, city) {
-            if (s.insp > 0)
-                return;
-            var team = city ? null : freeItem();
-            if (team) {
-                team.at = s.id;
-                team.eta = 0;
-                G.inv.item = Math.max(0, G.inv.item - 1);
-                s.inspBy = team;
-                s.insp = 22 * .7
-            }
-            else if (G.ecrews > 0) {
-                G.ecrews--;
-                s.inspBy = 'city';
-                s.insp = 22
-            }
-            else {
-                if (!pay(CDc.item.c, 'Seismic Inspection Team bought'))
-                    return;
-                team = {
-                    at: s.id,
-                    eta: 0
-                };
-                G.items.push(team);
-                s.inspBy = team;
-                s.insp = 22 * .7
-            }
-            toast('Inspecting ' + s.name + ' (' + Math.round(s.insp) + ' s)')
-        }
-
-        // ===== CAIRO: iftar rush, a stadium surge and crowd contagion
-        MODS.cairo = {
-            initOcc: [.68, .82],
-            init: function() {
-                SL.forEach(function(s) {
-                    s.gate = false;
-                    s.out = [];
-                    s.gacc = 0;
-                    s.sacc = 0;
-                    s.racc = 0
-                });
-                G.iftar = 387
-            },
-            demand: function(t) {
-                return t < G.iftar ? 1.1 + 1.1 * clamp((t - 80) / 90, 0, 1) : .45 + .6 * clamp((t - G.iftar - 100) / 130, 0, 1)
-            },
-            gate: function(s) {
-                if (!s.gate)
-                    return false;
-                s.out.push(G.t);
-                return true
-            },
-            dwell: function(s) {
-                return occ(s) * 1.6
-            },
-            cc: function(s) {
-                return itemsAt(s) > 0
-            },
-            step: function(dt) {
-                var self = this;
-                S.stad.boost = (G.t >= 292 && G.t < 358) ? 8 : 1;
-                if (!G.f.match && G.t >= 292) {
-                    G.f.match = 1;
-                    toast('Match over at Cairo International Stadium');
-                    speak('The match just ended. Expect a surge at Stadium heading toward Attaba.', 7)
-                }
-                if (!G.f.ift && G.t >= G.iftar) {
-                    G.f.ift = 1;
-                    toast('Sunset: iftar begins');
-                    speak('Sunset. Iftar has started and the streets are emptying, so demand will drop for a while.', 7)
-                }
-                SL.forEach(function(s) {
-                    if (s.out.length) {
-                        if (s.gate) {
-                            s.gacc += dt * s.cap / 40;
-                            while (s.gacc >= 1 && s.out.length) {
-                                s.gacc--;
-                                s.q.push(s.out.shift())
-                            }
-                        } else {
-                            while (s.out.length)
-                                s.q.push(s.out.shift())
-                        }
-                    }
-                    var nb = neigh(s).filter(function(o) {
-                        return !o.closed
-                    }).sort(function(a, b) {
-                        return occ(a) - occ(b)
-                    })[0];
-                    if (occ(s) > 1) {
-                        s.sacc += (s.q.length - s.cap) * .035 * dt;
-                        while (s.sacc >= 1 && nb) {
-                            s.sacc--;
-                            nb.q.push(s.q.pop())
-                        }
-                    }
-                    if (self.cc(s) && occ(s) > .85 && nb && occ(nb) < .75) {
-                        s.racc += dt * 5;
-                        while (s.racc >= 1) {
-                            s.racc--;
-                            nb.q.push(s.q.pop())
-                        }
-                    }
-                    if (occ(s) > 1.3 && Math.random() < .04 * (occ(s) - 1.3) * 4 * dt) {
-                        var n = Math.min(s.q.length, 14);
-                        s.q.splice(0, n);
-                        G.strOut += n;
-                        incident(8, 'Dangerous crush on the platform at ' + s.name + '.', n)
-                    }
-                });
-            },
-            meters: function() {
-                var open = SL.filter(function(s) {
-                        return !s.closed
-                    }),
-                    po = open.length ? 100 * open.reduce(function(a, s) {
-                        return a + occ(s)
-                    }, 0) / open.length : 0,
-                    run = TR.filter(function(t) {
-                        return !t.parked && t.down <= 0
-                    }),
-                    tu = run.length ? 100 * run.reduce(function(a, t) {
-                        return a + t.load / t.cap
-                    }, 0) / run.length : 0,
-                    dl = 1 + Math.max(0, (G.w ? G.w.avg : 0) - 25) / 12;
-                return [{
-                    n: 'Platform occupancy',
-                    ic: '👥',
-                    v: po,
-                    txt: Math.round(po) + '%',
-                    th: [75, 85, 95]
-                }, {
-                    n: 'Train capacity utilisation',
-                    ic: '🚇',
-                    v: tu,
-                    txt: Math.round(tu) + '%',
-                    th: [80, 95, 100]
-                }, {
-                    n: 'Average train delay',
-                    ic: '⏱️',
-                    v: dl,
-                    txt: dl.toFixed(1) + ' min',
-                    th: [1, 3, 5]
-                }]
-            },
-            sky: function() {
-                var k = G.t < G.iftar ? clamp(G.t / G.iftar, 0, 1) : 1,
-                    d = G.t < G.iftar ? 0 : clamp((G.t - G.iftar) / 90, 0, 1);
-                return d > 0 ? {
-                    bg: [0xf08a5d, 0x4f557c, d],
-                    sun: 1.5 - .9 * d,
-                    hemi: .9 - .3 * d,
-                    sunC: 0xffb27a
-                } : {
-                    bg: [0xe9d3a5, 0xf08a5d, k * k],
-                    sun: 2.2 - .7 * k,
-                    hemi: 1,
-                    sunC: 0xffe2b0
-                }
-            },
-            vis: function() {
-                var self = this;
-                SL.forEach(function(s) {
-                    var o = s.o,
-                        n = Math.min(16, Math.ceil(s.out.length / 7));
-                    o.street.forEach(function(p, i) {
-                        p.visible = i < n
-                    });
-                    o.gate.visible = s.gate;
-                    o.cc.visible = itemsPlaced(s) > 0
-                })
-            },
-            f60: function(s) {
-                var f = s.q.length + s.out.length * .5 + slope(s.qh) * 60;
-                if (s.id === 'stad' && G.t > 192 && G.t < 292)
-                    f += s.cap * 1.6;
-                return Math.max(0, Math.round(f))
-            },
-            label: function(s) {
-                var f = this.f60(s) / s.cap;
-                return ['→' + Math.round(f * 100) + '%' + (s.gate ? ' metered' : ''), f > 1 ? 'hot' : '']
-            },
-            detail: function(s) {
-                return s.q.length + ' on the platform (' + Math.round(occ(s) * 100) + '%), ' + s.out.length + ' held on the street. AI forecast ' + Math.round(this.f60(s) / s.cap * 100) + '% in 60 s.' + (this.cc(s) ? ' Routing system active.' : '') + (s.id === 'marg' ? ' Mar Girgis has no other metro line nearby.' : '')
-            },
-            extra: function() {
-                var it = G.iftar - G.t;
-                return 'Iftar ' + (it > 0 ? 'in ' + fmt(it) : 'under way') + ' · stadium match ' + (G.t < 292 ? 'ends in ' + fmt(292 - G.t) : 'over') + ' · held on the street: ' + SL.reduce(function(a, s) {
-                    return a + s.out.length
-                }, 0) + '.'
-            },
-            acts: function(s) {
-                var a = [{
-                        t: s.gate ? 'Lift entry metering' : 'Meter entry (hold riders on the street)',
-                        fn: function() {
-                            setGate(s, !s.gate)
-                        }
-                    }],
-                    n = itemsPlaced(s);
-                if (n)
-                    a.push({
-                        t: 'Remove routing system',
-                        fn: function() {
-                            recallItem(s)
-                        }
-                    });
-                else {
-                    a.push({
-                        t: 'Deploy crowd routing system' + itemNote(),
-                        fn: function() {
-                            deployItem(s)
-                        }
-                    });
-                    var src = G.items.filter(function(x) {
-                        return x.at && x.at !== s.id
-                    }).sort(function(x, y) {
-                        return occ(S[x.at]) - occ(S[y.at])
-                    })[0];
-                    if (src)
-                        a.push({
-                            t: 'Move routing system from ' + S[src.at].name + ' (free)',
-                            fn: function() {
-                                deployItem(s, src)
-                            }
-                        })
-                }
-                return a
-            },
-            forecast: function() {
-                var self = this,
-                    l = SL.slice().sort(function(a, b) {
-                        return self.f60(b) / b.cap - self.f60(a) / a.cap
-                    }).slice(0, 3);
-                return 'Crowd model, 60 s ahead (includes the match schedule): ' + l.map(function(s) {
-                    return s.name.split(' ')[0] + ' ' + Math.round(self.f60(s) / s.cap * 100) + '%'
-                }).join(', ') + '.'
-            },
-            recs: function() {
-                var self = this,
-                    r = [];
-                SL.forEach(function(s) {
-                    var f = self.f60(s) / s.cap;
-                    if (!self.cc(s) && !itemsPlaced(s) && !s.closed && f > .95 && (freeItem() || G.money > CDc.item.c * 2))
-                        r.push({
-                            need: 'item',
-                            key: 'cc' + s.id,
-                            text: 'Deploy a crowd routing system at ' + s.name + itemNote() + '.',
-                            why: 'Platform forecast ' + Math.round(f * 100) + '% in 60 s. The system steers riders to quieter neighbouring stations above 85%.',
-                            conf: 80,
-                            score: 78 + f * 10,
-                            good: occ(s) > .8 || s.id === 'stad',
-                            apply: function() {
-                                deployItem(s)
-                            },
-                            lesson: 'The crowd there was already easing.'
-                        });
-                    if (!s.gate && !s.closed && f > 1.15)
-                        r.push({
-                            key: 'g' + s.id,
-                            text: 'Meter entry at ' + s.name + '.',
-                            why: 'Platform forecast ' + Math.round(f * 100) + '% of capacity in 60 s. Above 130% risks a crush.',
-                            conf: 81,
-                            score: 80 + f * 10,
-                            good: occ(s) > .95,
-                            apply: function() {
-                                setGate(s, true)
-                            },
-                            lesson: 'The crowd there was already easing, so metering only made riders wait outside.'
-                        });
-                    if (s.gate && occ(s) < .6 && f < .9)
-                        r.push({
-                            key: 'ug' + s.id,
-                            text: 'Lift entry metering at ' + s.name + '.',
-                            why: 'Forecast down to ' + Math.round(f * 100) + '% on the platform.',
-                            conf: 84,
-                            score: 50,
-                            good: occ(s) < .75,
-                            apply: function() {
-                                setGate(s, false)
-                            }
-                        })
-                });
-                if (mode === 'avg' && !S.marg.gate && (occ(S.sadat) > .9 || occ(S.nasser) > .9))
-                    r.push({
-                        key: 'eqt',
-                        text: 'Meter entry at Mar Girgis to free Line 1 seats for Sadat.',
-                        why: 'Holding riders at the quiet end of Line 1 leaves more room on trains reaching Sadat. Cuts the network’s average wait by about 6%.',
-                        conf: 77,
-                        score: 86,
-                        good: false,
-                        apply: function() {
-                            setGate(S.marg, true);
-                            G.eqPen += 10
-                        },
-                        lesson: 'Mar Girgis riders have no other metro line nearby. Metering there made them wait on the street to speed up everyone else: the average improved, fairness didn’t. In “Fair to all” mode I don’t suggest this.'
-                    });
-                return r
-            }
-        };
-        function setGate(s, on) {
-            s.gate = on;
-            toast((on ? 'Entry metered at ' : 'Metering lifted at ') + s.name)
-        }
-
         // ---------- progress + mission start
         var prog = {
                 open: 1,
-                stars: [0, 0, 0, 0, 0]
+                stars: [0]
             },
             A = false;
         try {
-            var sv = JSON.parse(localStorage.getItem('metrocrisis_fresh_v4'));
-            if (sv && Array.isArray(sv.stars) && sv.stars.length === 5 && sv.stars.every(function(n) {
+            var sv = JSON.parse(localStorage.getItem('metrocrisis_nyc_v1'));
+            if (sv && Array.isArray(sv.stars) && sv.stars.length === 1 && sv.stars.every(function(n) {
                 return Number.isInteger(n) && n >= 0 && n <= 3
             }) && sv.open)
                 prog = sv
         } catch (e) {}
         function save() {
             try {
-                localStorage.setItem('metrocrisis_fresh_v4', JSON.stringify(prog))
+                localStorage.setItem('metrocrisis_nyc_v1', JSON.stringify(prog))
             } catch (e) {}
         }
         function startMission(i, bought) {
@@ -8152,11 +6573,6 @@
             $('#cpct').textContent = Math.round(G.chaos) + '%';
             $('#cpk').textContent = Math.round(G.peak) + '%';
             $('#money').textContent = cash(G.money);
-            var u = G.um.map(mrow).join('');
-            if (u !== lastU) {
-                $('#umet').innerHTML = u;
-                lastU = u
-            }
             var c = G.cm.map(mrow).join('') + '<div class="small" style="margin-top:3px">' + esc(MOD.extra()) + '</div>';
             if (c !== lastC) {
                 $('#cmet').innerHTML = c;
@@ -8464,7 +6880,7 @@
             var first = win && prog.stars[G.i] === 0;
             if (win) {
                 prog.stars[G.i] = Math.max(prog.stars[G.i], stars);
-                prog.open = Math.max(prog.open, Math.min(CD.length, G.i + 2));
+                prog.open = 1;
                 save()
             }
             var km = G.log.filter(function(l) {
@@ -8474,7 +6890,7 @@
                 return b ? '<span class="y">✔</span>' : '<span class="n">✖</span>'
             }
             var h = '<div class="kick">' + cd.flag + ' ' + esc(cd.sys) + ' · ' + esc(cd.mission) + '</div><h1>' + (win ? ['', 'Crisis Survived', 'Crisis Controlled', 'Crisis Mastered'][stars] : 'System collapse') + '</h1><p class="lead">' + (win ? 'You kept ' + esc(cd.city) + ' running for the full 10-minute shift.' : esc(why || '')) + '</p>' +
-            '<div class="big3">' + '★'.repeat(stars) + '☆'.repeat(3 - stars) + '</div>' + (first ? '<div class="pop">New city cleared<b>' + esc(cd.city) + '</b></div>' : '') +
+            '<div class="big3">' + '★'.repeat(stars) + '☆'.repeat(3 - stars) + '</div>' + (first ? '<div class="pop">Mission completed<b>' + esc(cd.city) + '</b></div>' : '') +
             '<div class="st3"><b></b><b>Peak disaster ' + Math.round(pk) + '%</b><b>Passengers safe ' + safe.toFixed(1) + '%</b><b>Network performance ' + Math.round(perf) + '%</b>' +
             lv.map(function(l) {
                 return '<span>' + '★'.repeat(l.n) + ' ' + l.t + '</span><span>' + ck(l.ok[0]) + ' below ' + l.th[0] + '%</span><span>' + ck(l.ok[1]) + ' at least ' + l.th[1] + '%</span><span>' + ck(l.ok[2]) + ' at least ' + l.th[2] + '%</span>'
@@ -8488,7 +6904,7 @@
             (G.inc.length ? '<details><summary>Incident log (' + G.inc.length + ')</summary>' + G.inc.map(function(x) {
                 return '<p>' + fmt(TIME - x.t) + ' left: ' + esc(x.text) + '</p>'
             }).join('') + '</details>' : '') +
-            '<div class="btns"><button class="btn" id="re">Retry ' + esc(cd.city) + '</button>' + (win && G.i + 1 < CD.length ? '<button class="btn" id="nx">Next city</button>' : '') + '<button class="btn ghost" id="mn">All missions</button></div>';
+            '<div class="btns"><button class="btn" id="re">Retry ' + esc(cd.city) + '</button>' + (win && G.i + 1 < CD.length ? '<button class="btn" id="nx">Next city</button>' : '') + '<button class="btn ghost" id="mn">Mission setup</button></div>';
             $('#scrc').innerHTML = h;
             $('#scr').style.display = 'flex';
             $('#scrc').scrollTop = 0;
@@ -8506,11 +6922,11 @@
             var n = prog.stars.filter(function(s) {
                 return s > 0
             }).length;
-            return ['Trainee Dispatcher', 'Line Controller', 'Network Controller', 'Senior Controller', 'Chief Controller', 'Global Operator'][n]
+            return ['Trainee Dispatcher', 'NYC Emergency Director'][Math.min(n, 1)]
         }
-        var RULES = '<details><summary>How to play</summary><p>You lead the emergency-response team for each city with a <b>$5 million</b> budget. Spend some before the round to build up equipment, and keep the rest for emergencies during the shift. Choose any city and replay it as often as you like.</p>' +
-        '<p>Every city faces two random standard issues: <b>train breakdowns</b> (4% chance per train per 30 simulated seconds) and <b>signal malfunctions</b> (3% per line per 30 simulated seconds). Game speed (1×–4×) changes none of these chances or your score.</p>' +
-        '<p><b>Win</b> by surviving the full 10 simulated minutes. <b>Lose</b> if the disaster level reaches 100% or more than 80% of passengers become endangered. The disaster level rises as the meters in the left panel move from ✔ normal to ⚠ warning to ⛔ critical, and spikes on incidents.</p>' +
+        var RULES = '<details><summary>How to play</summary><p>You lead the New York City MTA emergency-response team with a <b>$5 million</b> budget. Spend some before the round to build up equipment, and keep the rest for emergencies during the shift. Replay the NYC mission as often as you like.</p>' +
+        '<p>The NYC mission has two random standard issues: <b>train breakdowns</b> (4% chance per train per 30 simulated seconds) and <b>signal malfunctions</b> (3% per line per 30 simulated seconds). Game speed (1×–4×) changes none of these chances or your score.</p>' +
+        '<p><b>Win</b> by surviving the full 10 simulated minutes. <b>Lose</b> if the disaster level reaches 100% or more than 80% of passengers become endangered. The disaster level rises with the three city-specific hazard meters and spikes during major incidents.</p>' +
         '<table class="small" style="border-collapse:collapse;margin:6px 0"><tr><th style="text-align:left;padding-right:10px">Rating</th><th style="padding-right:10px">Peak disaster</th><th style="padding-right:10px">Passengers safe</th><th>Avg network performance</th></tr>' +
         '<tr><td>★ Crisis Survived</td><td>below 100%</td><td>at least 20%</td><td>at least 30%</td></tr><tr><td>★★ Crisis Controlled</td><td>below 80%</td><td>at least 60%</td><td>at least 60%</td></tr><tr><td>★★★ Crisis Mastered</td><td>below 60%</td><td>at least 90%</td><td>at least 85%</td></tr></table>' +
         '<p class="small">The peak disaster level counts, not the final one, so you can’t let things spiral and fix them at the last second.</p></details>';
@@ -8574,17 +6990,17 @@
                 el.classList.remove('open')
         }
         function showMenuPopup(page) {
-            var how = '<p>You are the emergency-response director for a major subway system. Your goal is to keep passengers safe while managing a citywide crisis.</p>' +
-            '<h3>1. Choose a city</h3><p>Pick one of five locations, each with its own disaster: typhoon, flooding, heatwave, earthquake, or overcrowding.</p>' +
-            '<h3>2. Prepare your equipment</h3><p>Start with a $5 million emergency fund. Buy optional emergency teams, repair crews, additional trains, and city-specific equipment.</p>' +
-            '<h3>3. Take control of the 3D subway</h3><p>Click stations or trains to open action menus. Close unsafe stations, deploy supplies, suspend lines, and respond to train breakdowns and signal faults.</p>' +
-            '<h3>4. Use the camera</h3><p>Scroll to zoom, left-drag to rotate, right-drag to pan. Use the top-left controls to pause or return to missions.</p>' +
-            '<h3>5. Survive the mission</h3><p>Each city lasts 10 simulated minutes (1×–4×). Keep disaster severity under 100% and prevent more than 80% of passengers becoming endangered. Better passenger safety and network performance earn up to three stars.</p>';
-            var about = '<p><b>METRO CRISIS</b> is a 3D emergency-management game about the difficult choices involved in running public transportation when disasters hit.</p>' +
-            '<h3>Why this game exists</h3><p>Subways are critical infrastructure. Closing a station may save lives but can overload nearby routes. Keeping service running may reduce delays but increase danger. This game makes the trade-offs visible and lets you experiment with decisions.</p>' +
-            '<h3>How MetroMind AI works</h3><p>MetroMind analyzes simulated hazards, station congestion, and equipment failures. It estimates what may happen next, ranks possible emergency actions, and explains its reasoning and confidence.</p>' +
-            '<p><b>Easy:</b> proactive guidance. <b>Normal:</b> help on request. <b>Hard:</b> forecasts only. <b>Extreme:</b> no AI. You remain the decision-maker.</p>' +
-            '<p><b>Prototype note:</b> the advisor currently uses programmed models and rules, not a live trained AI service. Risk figures are in-game estimates, not official transit safety forecasts.</p>';
+            var how = '<p>Run New York City’s subway during a flash-flood emergency. Survive 10 simulated minutes without reaching 100% disaster severity or endangering more than 80% of riders.</p>' +
+            '<h3>1. Choose your AI mode</h3><p>Easy recommends actions automatically; Normal offers help when asked; Hard shows forecasts only; Extreme has no AI.</p>' +
+            '<h3>2. Operate the subway</h3><p>Click a station or train to view available actions. Close flooded stations, suspend unsafe lines, deploy water pumps, and send emergency teams. Unexpected train breakdowns and signal faults can also occur.</p>' +
+            '<h3>3. Manage your budget</h3><p>You start with $5 million. Buy repair crews ($250k), response teams ($150k), extra trains ($350k), and pumps ($300k).</p>' +
+            '<h3>4. Watch the flooding meters</h3><p>Rainfall intensity, tunnel water depth, and drainage utilization show the growing threat. Keep riders away from flooded areas. Necessary safety closures are better than dangerous service.</p>' +
+            '<h3>5. Earn stars</h3><p>Survive 10 minutes for at least one star. Better peak disaster severity, passenger safety, and network performance can earn up to three stars. Use 1×–4× speed. Scroll to zoom, drag to rotate, right-drag to pan.</p>';
+            var about = '<p><b>METRO CRISIS</b> is an educational 3D game about protecting New York City’s subway system during heavy rainfall and flooding.</p>' +
+            '<h3>Why this game?</h3><p>Closing one flooded station can send passengers toward already crowded routes. Keeping trains moving may improve commutes but become unsafe when water reaches electrical infrastructure. You decide how to allocate limited emergency resources.</p>' +
+            '<h3>How MetroMind AI works</h3><p>MetroMind analyzes simulated rainfall, tunnel water levels, station conditions, and disruptions. It forecasts where flooding may spread and proposes actions. You can accept or dismiss advice; the AI does not make decisions for you.</p>' +
+            '<p><b>AI modes:</b> Easy — automatic suggestions; Normal — suggestions on request; Hard — forecasts only; Extreme — no AI assistance.</p>' +
+            '<p class="small"><b>Prototype note:</b> MetroMind currently uses programmed prediction rules, not a trained live AI model. Disaster thresholds, prices, and incident probabilities are illustrative gameplay assumptions.</p>';
             $('#modalTitle').textContent = page === 'how' ? 'How to Play' : 'About METRO CRISIS';
             $('#modalBody').innerHTML = page === 'how' ? how : about;
             $('#menuModal').classList.add('open');
@@ -8611,13 +7027,17 @@
             cs.tt.set(0, 0, 0);
             cs.tDist = 78;
             cs.tPit = .7;
-            var h = '<div class="mapHeading"><span class="introPill">✦ SELECT YOUR NEXT MISSION</span><button class="btn ghost" id="backIntro">← Back</button></div>' +
-            '<div class="mapIntro"><h1>Choose your city.</h1><p class="lead">Different cities. Different crises. Same mission: protect the people who depend on you. Select a city to start immediately. You can buy supplies during the mission.</p></div>' +
-            '<div class="mapDifficulty"><label for="mapDifficulty">AI assistance</label><select id="mapDifficulty"><option value="easy">Easy — AI suggestions</option><option value="normal">Normal — Ask for help</option><option value="hard">Hard — Forecasts only</option><option value="extreme">Extreme — No AI</option></select></div>' +
-            '<div class="mapFoot"><div class="mgrid">' + CD.map(function(c, i) {
-                return '<div class="mapChoice"><button class="mc" data-i="' + i + '"><div class="cityart">' + cityIllustration(c.id) + '</div><b>' + esc(c.sys) + '</b><em>' + esc(c.mission) + '</em><div class="stars">' + '★'.repeat(prog.stars[i]) + '☆'.repeat(3 - prog.stars[i]) + '</div><span class="playCaption">▶ Play mission</span></button><button class="btn ghost preMission" data-prepare="' + i + '" style="width:100%;margin-top:9px">Prepare equipment first</button></div>'
-            }).join('') + '</div>' +
-            '<div class="mapFooter"><div class="small">Your rank: <b>' + rank() + '</b> · Five playable cities · 10-minute missions</div><div class="small">Choose a city to play. Optional preparation is available below each map.</div></div></div>';
+            var h = '<div class="nycSetup">' +
+            '<div class="setupHeader"><span class="setupEyebrow">✦ NYC EMERGENCY OPERATIONS</span><button class="btn ghost setupBack" id="backIntro">← Home</button></div>' +
+            '<div class="setupHero">' +
+            '<div class="setupCopy"><span class="setupEyebrow">NEW YORK CITY MTA</span><h1>The Underground Floods</h1>' +
+            '<p class="setupDesc">Heavy rain is flooding the subway. Close unsafe stations, deploy pumps, and protect passengers while keeping safe trains moving.</p>' +
+            '<div class="setupFacts"><span>10-minute mission</span><span>$5M budget</span><span>1×–4× speed</span></div></div>' +
+            '<figure class="setupArt" aria-label="Illustration of flooding in New York City">' + cityIllustration('nyc') + '</figure>' +
+            '</div>' +
+            '<div class="setupModes"><label for="mapDifficulty">AI assistance</label><select id="mapDifficulty"><option value="easy">Easy — AI suggests actions</option><option value="normal">Normal — Ask AI for help</option><option value="hard">Hard — Forecasts only</option><option value="extreme">Extreme — No AI</option></select></div>' +
+            '<div class="setupBottom"><p>Choose how much help you want from MetroMind. You can purchase emergency equipment during the mission.</p><button class="btn big setupGo" id="playNYC">Get Started →</button></div>' +
+            '</div>';
             $('#scrc').innerHTML = h;
             $('#scr').style.display = 'flex';
             $('#scrc').scrollTop = 0;
@@ -8625,18 +7045,10 @@
             $('#mapDifficulty').onchange = function() {
                 AI_MODE = this.value
             };
-            $$('.mc').forEach(function(b) {
-                b.onclick = function() {
-                    AI_MODE = $('#mapDifficulty').value;
-                    startMission(+b.dataset.i, {})
-                }
-            });
-            $$('.preMission').forEach(function(b) {
-                b.onclick = function() {
-                    AI_MODE = $('#mapDifficulty').value;
-                    brief(+b.dataset.prepare)
-                }
-            });
+            $('#playNYC').onclick = function() {
+                AI_MODE = $('#mapDifficulty').value;
+                brief(0)
+            };
             $('#backIntro').onclick = intro;
         }
         var SHORT_AI = {
@@ -8686,7 +7098,7 @@
                 shop.map(function(x, j) {
                     return '<div class="it' + (x[0] === 'item' ? ' city' : '') + '"><div><b>' + esc(x[1]) + '</b> <span class="cost">' + cash(x[2]) + '</span><br><span class="small">' + esc(x[3]) + '</span></div><div class="stp"><button data-j="' + j + '" data-d="-1" aria-label="Remove one"' + (b[x[0]] ? '' : ' disabled') + '>−</button><b>' + b[x[0]] + '</b><button data-j="' + j + '" data-d="1" aria-label="Add one"' + (b[x[0]] >= x[4] || left < x[2] ? ' disabled' : '') + '>+</button></div></div>'
                 }).join('') + '</div>' +
-                RULES + '<div class="btns"><button class="btn big" id="go">Start the shift</button><button class="btn ghost" id="bk">All missions</button></div>';
+                RULES + '<div class="btns"><button class="btn big" id="go">Start the shift</button><button class="btn ghost" id="bk">Mission setup</button></div>';
                 $$('#scrc .stp button').forEach(function(x) {
                     x.onclick = function() {
                         var it = shop[+x.dataset.j];
@@ -8768,6 +7180,20 @@
         };
         $('#view').onclick = resetView;
         $('#exit').onclick = title;
+        // Prototype-only admin shortcut. This is not a secure authentication system.
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+                var pw = prompt('METRO CRISIS — Admin password');
+                if (pw === 'train-admin') {
+                    A = true;
+                    if (G)
+                        $('#adm').hidden = false;
+                    toast('Admin controls enabled')
+                }
+                else if (pw !== null)
+                    toast('Incorrect admin password');
+            }
+        });
         $('#a1').onclick = function() {
             if (G && !G.over)
                 G.money += 1000000
