@@ -1,0 +1,15 @@
+#realAdvice{max-height:calc(100vh - 190px);overflow-y:auto}#realAdvice .llmError{padding:10px;margin:10px 0;background:#542c2c;color:#fff;border:1px solid #efb0a4;border-radius:8px}#realAdvice .llmControls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid #557082;margin-top:10px;padding-top:10px}#realAdvice .realAdviceBody{max-height:42vh;overflow:auto}#realAdvice .realAdviceBody p{color:#fff}#realAdvice small{color:#c2d9e7}#realAdvice button{margin:4px 4px 4px 0}#llmConnection{padding:12px;background:#15394b;color:#fff;border-radius:8px}
+/* LLM explanations need more room than the original short rule cards. */
+body.realism #realAdvice{background:#153548;color:#fff;border:1px solid #547b91;height:62dvh;max-height:62dvh;overflow:hidden}
+body.realism #realAdvice h3,body.realism #realAdvice p,body.realism #realAdvice b,body.realism #realAdvice strong{color:#fff}
+body.realism #realAdvice .realMuted,body.realism #realAdvice small,body.realism #realAdvice .advicePinnedNote{color:#c6dce9}
+body.realism #realAdvice .realPriority{background:#214b60;color:#fff;border-color:#6b92a5}
+body.realism #realAdvice .realAdviceBody{max-height:none;min-height:55px;flex:1 1 auto;overflow:auto}
+body.realism #realAdvice .realAdviceFooter{background:transparent}
+body.realism #realAdvice .adviceCounts{border-color:#6b92a5;color:#c6dce9}
+body.realism #realAdvice .adviceCounts span{color:#c6dce9}
+body.realism #realSelection{top:calc(90px + 62dvh);max-height:calc(38dvh - 106px)}
+body.realism.ai-extreme #realSelection{top:78px;max-height:calc(100dvh - 94px)}
+@media(max-width:750px){body.realism #realAdvice{top:78px;bottom:auto!important;left:auto;right:8px;width:270px;height:62dvh;max-height:62dvh!important}body.realism #realSelection{right:8px;top:calc(90px + 62dvh);max-height:calc(38dvh - 106px)}}
+
+body.realism #realAdvice .advicePinnedNote{background:transparent;border:1px solid #547b91;color:#d4e7f1;padding:6px;font-size:10px;margin:5px 0}
