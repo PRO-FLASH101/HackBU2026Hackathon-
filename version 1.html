@@ -588,6 +588,27 @@
         will-change: transform
     }
 
+    .geoLb {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 2;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(244, 248, 252, .78);
+        border: 1px solid rgba(175, 192, 209, .95);
+        color: #314861;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .02em;
+        white-space: nowrap;
+        pointer-events: none;
+        box-shadow: 0 3px 10px rgba(16, 39, 61, .10);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        text-transform: none
+    }
+
     .lb .q {
         background: #ffc400;
         color: #101114;
@@ -3029,13 +3050,13 @@
             ground: 0x8a8f96,
             grid: .51,
             gsp: 52,
-            st: [['times', 'Times Sq–42 St', 40.7553, -73.9871, 3.6, 'billboards', .85], ['gct', 'Grand Central–42 St', 40.7527, -73.9772, 3.2, 'grandCentral', .8], ['union', '14 St–Union Sq', 40.7359, -73.9906, 2.8, 'plaza', .55], ['canal', 'Canal St', 40.7191, -74.0002, 2.2, 'chinatown', .22], ['fulton', 'Fulton St', 40.7102, -74.0078, 2.6, 'oculus', .18], ['sferry', 'Whitehall St–South Ferry', 40.7031, -74.0130, 1.8, 'ferry', .05], ['atl', 'Atlantic Av–Barclays Ctr', 40.6843, -73.9776, 2.6, 'arena', .5]],
+            st: [['times', 'Times Sq–42 St', 40.7553, -73.9871, 3.6, 'billboards', .85], ['gct', 'Grand Central–42 St', 40.7527, -73.9772, 3.2, 'grandCentral', .8], ['qboro', 'Queensboro Plaza', 40.7505, -73.9402, 2.2, 'plaza', .86], ['union', '14 St–Union Sq', 40.7359, -73.9906, 2.8, 'plaza', .55], ['canal', 'Canal St', 40.7191, -74.0002, 2.2, 'chinatown', .22], ['fulton', 'Fulton St', 40.7102, -74.0078, 2.6, 'oculus', .18], ['sferry', 'Whitehall St–South Ferry', 40.7031, -74.0130, 1.8, 'ferry', .05], ['atl', 'Atlantic Av–Barclays Ctr', 40.6843, -73.9776, 2.6, 'arena', .5]],
             ln: [{
                 n: '7 line',
                 sh: '7',
                 c: 0xb933ad,
-                stops: ['times', 'gct'],
-                o: [0, -2.6],
+                stops: ['times', 'gct', 'qboro'],
+                o: [0, -2.9],
                 tr: 1
             },
             {
@@ -3051,7 +3072,7 @@
                 sh: '4 5 6',
                 c: 0x00933c,
                 stops: ['gct', 'union', 'fulton', 'atl'],
-                o: [2.6, 0],
+                o: [2.8, 0],
                 tr: 2
             },
             {
@@ -3059,12 +3080,14 @@
                 sh: '2 3',
                 c: 0xee352e,
                 stops: ['times', 'fulton', 'atl'],
-                o: [-2.6, 0],
+                o: [-2.8, 0],
                 tr: 2
             }],
-            lm: [['empire', 40.7484, -73.9857], ['chrysler', 40.7516, -73.9755], ['wtc', 40.7127, -74.0134]],
-            water: [[[40.80, -73.968], [40.77, -73.993], [40.75, -74.009], [40.73, -74.012], [40.71, -74.017], [40.70, -74.02], [40.68, -74.03], [40.64, -74.05], [40.64, -74.13], [40.80, -74.13]],
-            [[40.78, -73.940], [40.76, -73.957], [40.745, -73.969], [40.73, -73.972], [40.712, -73.977], [40.706, -73.997], [40.701, -74.012], [40.697, -74.02], [40.69, -74.012], [40.698, -73.993], [40.703, -73.978], [40.72, -73.962], [40.74, -73.955], [40.76, -73.940], [40.78, -73.925]]],
+            lm: [['empire', 40.7484, -73.9857], ['chrysler', 40.7516, -73.9755], ['wtc', 40.7127, -74.0134], ['museum', 40.7580, -73.9628]],
+            water: [
+            [[40.82, -74.032], [40.79, -74.020], [40.76, -74.015], [40.73, -74.017], [40.71, -74.021], [40.69, -74.026], [40.66, -74.040], [40.64, -74.050], [40.64, -74.120], [40.82, -74.120]],
+            [[40.80, -73.958], [40.78, -73.952], [40.76, -73.947], [40.74, -73.952], [40.725, -73.963], [40.713, -73.974], [40.705, -73.988], [40.699, -74.003], [40.693, -74.010], [40.688, -73.998], [40.694, -73.986], [40.704, -73.972], [40.719, -73.958], [40.738, -73.947], [40.762, -73.939], [40.79, -73.936], [40.80, -73.942]],
+            [[40.709, -74.025], [40.703, -74.018], [40.695, -74.007], [40.682, -73.995], [40.666, -73.990], [40.650, -73.996], [40.644, -74.050], [40.709, -74.050]]],
             rivers: [],
             build: {
                 n: 520,
@@ -3112,7 +3135,8 @@
                 var p = raw(s[2], s[3]);
                 R = Math.max(R, Math.hypot(p[0], p[1]))
             });
-            var K = 21 / R;
+            var BASE = 39,
+                K = BASE / R;
             function comp(lat, lon) {
                 var p = raw(lat, lon),
                     x = p[0] * K,
@@ -3120,7 +3144,7 @@
                     r = Math.hypot(x, z);
                 if (r < 1e-6)
                     return [x, z];
-                var r2 = 21 * Math.pow(r / 21, .7);
+                var r2 = BASE * Math.pow(r / BASE, .95);
                 return [x / r * r2, z / r * r2]
             }
             var c = cd.st.map(function(s) {
@@ -3135,7 +3159,7 @@
                         var dx = f[j][0] - f[i][0],
                             dz = f[j][1] - f[i][1],
                             d = Math.hypot(dx, dz) || .01,
-                            mn = 12;
+                            mn = 22;
                         if (d < mn) {
                             var k = (mn - d) / 2 / d;
                             f[i][0] -= dx * k;
@@ -3153,7 +3177,7 @@
                     sz = 0,
                     sw = 0;
                 c.forEach(function(q, i) {
-                    var w = 1 / (Math.pow(p[0] - q[0], 2) + Math.pow(p[1] - q[1], 2) + 4);
+                    var w = 1 / (Math.pow(p[0] - q[0], 2) + Math.pow(p[1] - q[1], 2) + 5);
                     sx += dsp[i][0] * w;
                     sz += dsp[i][1] * w;
                     sw += w
@@ -3894,6 +3918,7 @@
             TR = [],
             CDc = null,
             lab = {},
+            geoLab = [],
             CARS = null;
         function buildCity(cd) {
             if (root) {
@@ -3906,6 +3931,10 @@
             $$('.lb').forEach(function(n) {
                 n.remove()
             });
+            $$('.geoLb').forEach(function(n) {
+                n.remove()
+            });
+            geoLab = [];
             root = new T.Group();
             scene.add(root);
             CDc = cd;
@@ -4014,6 +4043,22 @@
             });
             RV.forEach(function(r) {
                 ribbon(r.p, r.w + 1.2, mat(0xa59c88), .09)
+            });
+            var geoMarks = [
+            ['Manhattan', 40.748, -73.985, 0], ['Brooklyn', 40.684, -73.968, 0], ['Queens', 40.748, -73.928, 0], ['Hudson River', 40.748, -74.060, 1], ['East River', 40.736, -73.962, 1]
+            ];
+            geoMarks.forEach(function(m) {
+                var p = GEO.warp(m[1], m[2]);
+                var dv = document.createElement('div');
+                dv.className = 'geoLb' + (m[3] ? ' river' : '');
+                dv.textContent = m[0];
+                document.body.appendChild(dv);
+                geoLab.push({
+                    el: dv,
+                    x: p[0],
+                    z: p[1],
+                    y: m[3] ? 2.8 : 1.7
+                });
             });
             SL.forEach(function(s) {
                 placed.push({
@@ -6510,10 +6555,10 @@
             cs.tt.set(0, 0, 0);
             cs.tAng = .55;
             cs.tPit = .92;
-            cs.tDist = 60;
+            cs.tDist = 105;
             cs.ang = 2.6;
             cs.pit = 1.42;
-            cs.dist = 170;
+            cs.dist = 195;
             cs.ease = 1.3;
             speak('Welcome to ' + cd.city + '. Keep passengers safe and manage the emergency.', 7);
             genRecs();
@@ -6727,6 +6772,11 @@
                 var v = new T.Vector3(s.x, 3.2, s.z).project(cam);
                 d.style.display = v.z > 1 ? 'none' : '';
                 d.style.transform = 'translate(' + ((v.x * .5 + .5) * innerWidth) + 'px,' + ((-v.y * .5 + .5) * innerHeight) + 'px) translate(-50%,-100%)'
+            });
+            geoLab.forEach(function(g) {
+                var v = new T.Vector3(g.x, g.y, g.z).project(cam);
+                g.el.style.display = v.z > 1 ? 'none' : '';
+                g.el.style.transform = 'translate(' + ((v.x * .5 + .5) * innerWidth) + 'px,' + ((-v.y * .5 + .5) * innerHeight) + 'px) translate(-50%,-100%)';
             })
         }
         // ---------- selection panel
@@ -6739,7 +6789,7 @@
             if (focus) {
                 var s = S[id];
                 cs.tt.set(s.x, 0, s.z);
-                cs.tDist = Math.min(cs.tDist, 34);
+                cs.tDist = Math.min(cs.tDist, 48);
                 G.follow = null
             }
             tickUI()
@@ -6970,7 +7020,7 @@
                 buildCity(CD[0]);
             MOD = null;
             cs.tt.set(0, 0, 0);
-            cs.tDist = 77;
+            cs.tDist = 115;
             cs.tPit = .7;
             closeMenuPopup();
             $('#scrc').innerHTML = '<div class="homeScreen"><div class="homeLogo">METRO <span>CRISIS</span></div><div class="homeButtons"><button class="btn big" id="enterMaps">▶ Play</button><button class="btn ghost" id="homeHow">? How to Play</button><button class="btn ghost" id="homeAbout">ⓘ About</button></div></div>';
@@ -7025,7 +7075,7 @@
                 buildCity(CD[0]);
             MOD = null;
             cs.tt.set(0, 0, 0);
-            cs.tDist = 78;
+            cs.tDist = 115;
             cs.tPit = .7;
             var h = '<div class="nycSetup">' +
             '<div class="setupHeader"><span class="setupEyebrow">✦ NYC EMERGENCY OPERATIONS</span><button class="btn ghost setupBack" id="backIntro">← Home</button></div>' +
@@ -7080,7 +7130,7 @@
             buildCity(c);
             MOD = null;
             cs.tt.set(0, 0, 0);
-            cs.tDist = 70;
+            cs.tDist = 110;
             var shop = [['ert', '🚑 Emergency Response Team', COST.ert, 'Deploy at a station: −15% passenger safety risk there and faster evacuation. Reusable.', 6],
             ['crew', '🔧 Maintenance & Repair Crew', COST.crew, 'One repair job: fixes a broken train or signal, or restores 20% condition to damaged equipment.', 8],
             ['train', '🚇 Additional Train Deployment', COST.train, 'Extra train in service from the start: about +20% capacity on the line that needs it most.', 4],
@@ -7225,7 +7275,7 @@
             cs.tt.set(0, 0, 0);
             cs.tAng = .55;
             cs.tPit = .92;
-            cs.tDist = 60;
+            cs.tDist = 105;
             if (G)
                 G.follow = null
         }
@@ -7236,8 +7286,8 @@
             cs.tt.x += (-ca * dx - sa * dy) * k;
             cs.tt.z += (sa * dx - ca * dy) * k;
             var r = Math.hypot(cs.tt.x, cs.tt.z);
-            if (r > 55)
-                cs.tt.multiplyScalar(55 / r);
+            if (r > 100)
+                cs.tt.multiplyScalar(100 / r);
             if (G)
                 G.follow = null
         }
@@ -7271,7 +7321,7 @@
                     b = ptrs[ks[1]],
                     d = Math.hypot(a.x - b.x, a.y - b.y);
                 if (pinch)
-                    cs.tDist = clamp(cs.tDist * pinch / d, 14, 130);
+                    cs.tDist = clamp(cs.tDist * pinch / d, 14, 190);
                 pinch = d;
                 panBy(dx / 2, dy / 2)
             }
@@ -7284,7 +7334,7 @@
         });
         cvs.addEventListener('wheel', function(e) {
             e.preventDefault();
-            cs.tDist = clamp(cs.tDist * Math.exp(e.deltaY * .00085), 9, 145)
+            cs.tDist = clamp(cs.tDist * Math.exp(e.deltaY * .00085), 9, 195)
         }, {
             passive: false
         });
@@ -7372,9 +7422,9 @@
             if (KEYS.e)
                 cs.tAng -= dt * 1.4;
             if (KEYS.z || KEYS['-'])
-                cs.tDist = clamp(cs.tDist * (1 + dt), 14, 130);
+                cs.tDist = clamp(cs.tDist * (1 + dt), 14, 195);
             if (KEYS.x || KEYS['='])
-                cs.tDist = clamp(cs.tDist * (1 - dt), 14, 130);
+                cs.tDist = clamp(cs.tDist * (1 - dt), 14, 195);
             if (!G)
                 cs.tAng += dt * .05;
             var e = Math.min(1, dt * cs.ease);
