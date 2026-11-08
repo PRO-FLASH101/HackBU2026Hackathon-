@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--
+      METRO CRISIS - CODE WALKTHROUGH
+      1. <style>: layout/colors for the game panels, mission menu, and labels.
+      2. <body>: named UI containers; the JavaScript fills many dynamically.
+      3. Renderer, geography, buildCity: draw the NYC environment using Three.js.
+      4. trainStep/stationsStep/issuesStep: simulate transport and standard incidents.
+      5. MODS.nyc / scoreTick / step: flood behavior, severity, and game clock.
+      6. commonRecs/genRecs/decide: rule-based MetroMind decision support (not a trained AI model).
+      7. startMission/tickUI/finish: start a round, refresh the screen, and award stars.
+      8. intro/title/brief: Home -> NYC overview -> equipment preparation.
+      9. frame: main animation loop, called via requestAnimationFrame.
+      Comments document intent; modify gameplay logic carefully and test after changes.
+    -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>METRO CRISIS — NYC Flood Emergency</title>
     <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Barlow+Semi+Condensed:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
+    /* Core color variables: editing these updates the game palette. */
     :root {
         --p: #fff;
         --ink: #101114;
@@ -49,6 +63,7 @@
         box-sizing: border-box
     }
 
+    /* Full-window game canvas with no page scrolling. */
     html, body {
         margin: 0;
         height: 100%;
@@ -59,6 +74,7 @@
         font-size: 15px
     }
 
+    /* Full-screen container for the Three.js canvas. */
     #stage {
         position: fixed;
         inset:0
@@ -100,6 +116,7 @@
         font-family: 'Share Tech Mono', ui-monospace, monospace
     }
 
+    /* Shared card design for popups and panels. */
     .card {
         background: var(--p);
         border: 3px solid var(--bd);
@@ -128,11 +145,13 @@
         overflow: auto
     }
 
+    /* Left-side mission information, disasters, trains and shop. */
     #hud {
         left: max(10px, env(safe-area-inset-left));
         width: 292px
     }
 
+    /* Right-side MetroMind AI advisor. */
     #bot {
         right: max(10px, env(safe-area-inset-right));
         width: 300px
@@ -176,6 +195,7 @@
         margin-top: 8px
     }
 
+    /* Overall flood/disaster severity progress bar. */
     .meter {
         height: 16px;
         border: 2px solid var(--bd);
@@ -569,6 +589,7 @@
         margin: 3px 0
     }
 
+    /* Floating, clickable station labels projected over 3D stations. */
     .lb {
         position: absolute;
         left: 0;
@@ -588,6 +609,7 @@
         will-change: transform
     }
 
+    /* Floating borough and river names projected over the city. */
     .geoLb {
         position: absolute;
         left: 0;
@@ -652,6 +674,7 @@
         display: none
     }
 
+    /* Contextual actions after clicking a station or train. */
     #sp {
         position: absolute;
         z-index: 6;
@@ -672,6 +695,7 @@
         text-shadow: 0 0 2px #000
     }
 
+    /* Transient notifications for purchases, incidents, and decisions. */
     #toast {
         position: absolute;
         z-index: 7;
@@ -737,6 +761,7 @@
         display: none
     }
 
+    /* Overlay that holds home/mission setup/briefing pages. */
     #scr {
         position: absolute;
         inset: 0;
@@ -1277,6 +1302,7 @@
         background: linear-gradient(90deg, #f5c762, #e86847, #d33535)
     }
 
+    /* Tabs for switching between status, trains and shop. */
     .hudtabs {
         display: flex;
         gap: 5px;
@@ -1569,6 +1595,7 @@
         display: none !important
     }
 
+    /* Legacy camera toolbar, hidden in the simplified interface. */
     #cameraTools {
         position: absolute;
         z-index: 8;
@@ -1856,6 +1883,7 @@
             height: 22px
         }
     }/* Minimal home/menu redesign, preserving Deluxe v2 game styling */
+    /* Top-left Pause and Missions controls while playing. */
     #quickControls {
         position: fixed;
         top: 12px;
@@ -2032,6 +2060,7 @@
         display: flex
     }
 
+    /* Card layout for the How to Play and About popup. */
     .modalCard {
         width: min(640px, 95vw);
         max-height: 85vh;
@@ -2216,6 +2245,7 @@
         display: none !important
     }
 
+    /* Briefing text and equipment preparation layout. */
     .missionBrief {
         margin:10px 0 18px
     }
@@ -2237,6 +2267,7 @@
         border: 1px solid #dae4ee
     }
 
+    /* Subtle edge blur that keeps attention on the center of the map. */
     #focusBlur {
         position: fixed;
         inset: 0;
@@ -2271,6 +2302,7 @@
         display: none !important
     }
 
+    /* Short cinematic mission title shown before the timer runs. */
     #missionReveal {
         position: fixed;
         inset: 0;
@@ -2342,6 +2374,7 @@
         }
     }
 
+    /* Difficulty selection container. */
     .mapDifficulty {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
@@ -2460,6 +2493,7 @@
         box-sizing: border-box
     }
 
+    /* Overall compact mission overview presentation. */
     .nycSetup {
         color: var(--ink);
         width: 100%;
@@ -2489,6 +2523,7 @@
         font-size: 13px
     }
 
+    /* Two-column NYC mission description and illustration. */
     .nycSetup .setupHero {
         display: grid;
         grid-template-columns: minmax(0, 1fr) 245px;
@@ -2525,6 +2560,7 @@
         border-radius: 7px
     }
 
+    /* Illustration at the right of the NYC mission overview. */
     .nycSetup .setupArt {
         margin: 0;
         overflow: hidden;
@@ -2546,6 +2582,7 @@
         display: none
     }
 
+    /* Dropdown for the four AI assistance levels. */
     .nycSetup .setupModes {
         display: flex;
         flex-direction: column;
@@ -2588,6 +2625,7 @@
         margin: 0
     }
 
+    /* Primary Get Started button on the mission overview. */
     .nycSetup .setupGo {
         border-radius: 10px;
         box-shadow: none;
@@ -2634,8 +2672,11 @@
     </style>
 </head>
 <body>
+    <!-- The WebGL renderer inserts its interactive 3D canvas here. -->
     <div id="stage"></div>
+    <!-- Optional focus blur around the outside of the 3D city. -->
     <div id="focusBlur" aria-hidden="true"></div>
+    <!-- Top-left quick controls shown during the game. -->
     <div id="quickControls" aria-label="Mission controls">
         <span class="quickBrand">
             <span class="brandDot"></span>
@@ -2643,12 +2684,14 @@
         </span>
         <div id="quickButtons"></div>
     </div>
+    <!-- Legacy camera toolbar kept hidden; mouse camera movement still works. -->
     <div id="cameraTools" hidden aria-hidden="true">
         <button id="orbitTool" class="camtool chosen" type="button" aria-pressed="true">Rotate</button>
         <button id="panTool" class="camtool" type="button" aria-pressed="false">Pan</button>
         <button id="resetTool" class="camtool" type="button">Reset</button>
     </div>
 
+    <!-- Short mission title overlay shown before gameplay begins. -->
     <div id="missionReveal" hidden role="status" aria-live="polite">
         <div class="revealContent">
             <div class="revealEyebrow">Emergency operations</div>
@@ -2658,6 +2701,7 @@
         </div>
     </div>
     <div id="flash"></div>
+    <!-- Main mission dashboard: timer, disaster status, trains, shop and speed. -->
     <div id="hud" class="card pn">
         <div class="row topstatus">
             <div>
@@ -2736,6 +2780,7 @@
             </div>
         </div>
     </div>
+    <!-- MetroMind panel: suggests one action and waits for player acceptance. -->
     <div id="bot" class="card pn">
         <div class="row">
             <span id="botname">✦ METROMIND · AI ADVISOR</span>
@@ -2784,12 +2829,15 @@
             <div id="binfo" hidden>MetroMind uses programmed forecasts for NYC flooding and for the two standard issues, turns forecasts into one recommendation at a time, and explains why with a confidence level. It never acts without your approval. Accepting a recommendation that needs equipment you don’t have in reserve buys it from the emergency fund. It can be wrong: sensors fail, models miss things, and it can optimise the wrong goal. Your report scores whether you trusted it at the right moments.</div>
         </div>
     </div>
+    <!-- Dynamic station/train actions appear here when an object is selected. -->
     <div id="sp" class="card" hidden></div>
     <div id="toast" role="status"></div>
     <div id="hint">Select a station or train to act · Scroll to zoom · Drag to rotate · Right-drag to pan</div>
+    <!-- Home screen, NYC overview and equipment preparation are inserted here. -->
     <div id="scr">
         <div class="card" id="scrc"></div>
     </div>
+    <!-- How to Play and About text appears in this modal dialog. -->
     <div id="menuModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modalCard">
             <div class="modalTop">
@@ -2799,6 +2847,7 @@
             <div id="modalBody"></div>
         </div>
     </div>
+    <!-- JavaScript game engine begins here: 3D world, simulation, AI and UI events. -->
     <script>
     (function() {
         'use strict';
@@ -3554,6 +3603,7 @@
                 M(CY(.08, .15, 3, 6), 0xe8442e, 0, 16.8, 0, g);
                 return 2.8
             },
+            // Times Square advertising displays (visual-only 3D geometry).
             billboards: function(g) {
                 var cs = [0xff3d6e, 0x29b6f6, 0xffd23f, 0x7cff6b, 0xff8a1a, 0xb06bff];
                 [[-2.5, -1.6, 7], [2.4, -1.8, 9], [-2.6, 2, 6], [2.6, 2.2, 8]].forEach(function(b, i) {
@@ -3563,6 +3613,7 @@
                 });
                 return 4.2
             },
+            // Grand Central Terminal architecture (visual-only 3D geometry).
             grandCentral: function(g) {
                 M(BX(6.5, 3, 3.2), 0xd9cfb4, 0, 1.5, 0, g);
                 M(BX(6.7, .35, 3.4), 0xc9bfa4, 0, 3.15, 0, g);
@@ -3573,6 +3624,7 @@
                 M(BX(3.4, 10, 2.4), 0x9a9c99, 0, 5, -2.8, g);
                 return 4.6
             },
+            // Chrysler Building spire (visual-only 3D geometry).
             chrysler: function(g) {
                 M(BX(1.8, 10, 1.8), 0xcfd2d6, 0, 5, 0, g);
                 for (var k = 0; k < 4; k++)
@@ -3580,6 +3632,7 @@
                 M(CY(.02, .12, 2, 6), 0xe6edf3, 0, 14.2, 0, g);
                 return 1.6
             },
+            // Empire State Building silhouette (visual-only 3D geometry).
             empire: function(g) {
                 M(BX(3, 2.4, 2.4), 0xc8c2b4, 0, 1.2, 0, g);
                 M(BX(2.2, 8, 1.8), 0xc8c2b4, 0, 6.4, 0, g);
@@ -3588,6 +3641,7 @@
                 M(CY(.12, .3, 2.6, 8), 0xdddddd, 0, 16.1, 0, g);
                 return 2
             },
+            // Green square with trees (visual-only 3D geometry).
             plaza: function(g) {
                 M(BX(6, .06, 6), 0x6faa5a, 0, .04, 0, g);
                 for (var i = 0; i < 10; i++)
@@ -3596,6 +3650,7 @@
                 M(BX(.3, .9, .4), 0x4f6f5f, 0, 1.45, 0, g);
                 return 3.4
             },
+            // Low-rise storefront blocks (visual-only 3D geometry).
             chinatown: function(g) {
                 [0xc0392b, 0xe9c46a, 0x7fb3a0, 0xd98e6b].forEach(function(c, i) {
                     var x = -3 + i * 2,
@@ -3606,6 +3661,7 @@
                 });
                 return 4
             },
+            // White ribbed transit hub (visual-only 3D geometry).
             oculus: function(g) {
                 M(new T.SphereGeometry(1.6, 14, 8, 0, 2 * PI, 0, PI / 2), 0xf4f4f2, 0, 0, 0, g).scale.set(1.8, .6, 1);
                 for (var i = -5; i <= 5; i++)
@@ -3616,11 +3672,13 @@
                     });
                 return 3.5
             },
+            // One World Trade Center (visual-only 3D geometry).
             wtc: function(g) {
                 M(CY(.5, 1.9, 17, 4), smat(0x9fb7cc, .1, .75), 0, 8.5, 0, g).rotation.y = PI / 4;
                 M(CY(.04, .08, 4, 6), 0xdddddd, 0, 19, 0, g);
                 return 2.2
             },
+            // Ferry-terminal surroundings (visual-only 3D geometry).
             ferry: function(g) {
                 M(BX(4.4, 1.8, 2.6), 0xe8833a, 0, .9, 0, g);
                 M(BX(4.6, .2, 2.8), 0x8b939b, 0, 1.9, 0, g);
@@ -3628,6 +3686,7 @@
                 M(BX(1.6, .6, 1), 0xffffff, 0, .9, 2.6, g);
                 return 3.2
             },
+            // Barclays Center arena (visual-only 3D geometry).
             arena: function(g) {
                 M(CY(3, 3.2, 1.9, 24), 0x7a4128, 0, .95, 0, g).scale.z = .72;
                 M(CY(3.05, 3.05, .2, 24), 0x3a3f45, 0, 1.95, 0, g).scale.z = .72;
@@ -3787,6 +3846,7 @@
                 M(new T.SphereGeometry(.45, 10, 8), glow(0xe0b33a), 0, 9.2, 0, g);
                 return 1.4
             },
+            // Generic decorative museum or civic building (visual-only 3D geometry).
             museum: function(g) {
                 M(CY(2.4, 2.4, .08, 24), 0x6faa5a, 0, .05, 4.4, g);
                 M(BX(7, 2.6, 3.2), 0xc7735a, 0, 1.3, 0, g);
